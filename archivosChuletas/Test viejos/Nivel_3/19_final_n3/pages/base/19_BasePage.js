@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 
-import { Locators } from "../../data/data.js";
+import { Locators } from "../../data/19_data.js";
 
 export class BasePage {
     /** @param {import('@playwright/test').Page} page */
@@ -17,4 +17,3 @@ export class BasePage {
         await this.page.waitForTimeout(ms);
     }
 }
-
