@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Playwright — Machete Completo de Selectores</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #141720;
+    --surface2: #1c2030;
+    --border: #252a3a;
+    --border2: #303650;
+    --accent: #5b6ef5;
+    --accent2: #7c8fff;
+    --green: #3dd68c;
+    --green-bg: #0d2a1c;
+    --red: #ff5f6d;
+    --red-bg: #2a0d10;
+    --yellow: #f5c542;
+    --yellow-bg: #2a2000;
+    --blue: #42b3f5;
+    --blue-bg: #0d1f2a;
+    --purple: #b57bff;
+    --purple-bg: #1a0d2a;
+    --text: #e8eaf0;
+    --text2: #9aa0b8;
+    --text3: #6b7290;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, #0d0f14 0%, #141a2e 50%, #0d0f14 100%);
+    border-bottom: 1px solid var(--border2);
+    padding: 48px 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(91,110,245,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(91,110,245,0.12);
+    border: 1px solid rgba(91,110,245,0.3);
+    border-radius: 6px;
+    padding: 4px 12px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent2);
+    letter-spacing: .08em;
+    margin-bottom: 16px;
+  }
+  .header-badge::before { content: '▶'; font-size: 9px; }
+  .header h1 {
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .header h1 span { color: var(--accent2); }
+  .header-sub {
+    color: var(--text2);
+    font-size: 13px;
+    font-family: var(--mono);
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .header-sub span::before { content: '//  '; color: var(--text3); }
+
+  /* ── NAV ── */
+  .nav {
+    display: flex;
+    gap: 4px;
+    padding: 12px 40px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav a {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text3);
+    text-decoration: none;
+    padding: 5px 12px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: all .15s;
+    letter-spacing: .04em;
+  }
+  .nav a:hover { color: var(--accent2); border-color: var(--border2); background: var(--surface2); }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 40px 80px; }
+
+  /* ── SECTION ── */
+  .section { margin-bottom: 56px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(91,110,245,0.1);
+    border: 1px solid rgba(91,110,245,0.25);
+    border-radius: 4px;
+    padding: 3px 9px;
+    letter-spacing: .06em;
+    white-space: nowrap;
+  }
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -.01em;
+  }
+  .section-desc {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    margin-left: auto;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  thead tr {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border2);
+  }
+  th {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    color: var(--text3);
+    text-transform: uppercase;
+    padding: 10px 16px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    color: var(--text2);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.015); }
+
+  /* ── CODE ── */
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: rgba(91,110,245,0.1);
+    color: var(--accent2);
+    border: 1px solid rgba(91,110,245,0.2);
+    border-radius: 4px;
+    padding: 1px 6px;
+    white-space: nowrap;
+  }
+  .code-block {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface2);
+    color: var(--text2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 18px;
+    white-space: pre;
+    line-height: 1.8;
+    overflow-x: auto;
+    margin-top: 12px;
+  }
+  .code-block .kw  { color: var(--purple); }
+  .code-block .fn  { color: var(--blue); }
+  .code-block .str { color: var(--green); }
+  .code-block .re  { color: var(--yellow); }
+  .code-block .cm  { color: var(--text3); font-style: italic; }
+  .code-block .ok  { color: var(--green); }
+  .code-block .bad { color: var(--red); }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    letter-spacing: .05em;
+    white-space: nowrap;
+  }
+  .badge-green  { background: var(--green-bg);  color: var(--green);  border: 1px solid rgba(61,214,140,.2); }
+  .badge-blue   { background: var(--blue-bg);   color: var(--blue);   border: 1px solid rgba(66,179,245,.2); }
+  .badge-yellow { background: var(--yellow-bg); color: var(--yellow); border: 1px solid rgba(245,197,66,.2); }
+  .badge-red    { background: var(--red-bg);    color: var(--red);    border: 1px solid rgba(255,95,109,.2); }
+  .badge-purple { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(181,123,255,.2); }
+  .badge-accent { background: rgba(91,110,245,.1); color: var(--accent2); border: 1px solid rgba(91,110,245,.25); }
+
+  /* ── ALERTS ── */
+  .alert {
+    display: flex;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-top: 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    align-items: flex-start;
+  }
+  .alert-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .alert-warn  { background: var(--yellow-bg); border: 1px solid rgba(245,197,66,.25); color: #c9a72e; }
+  .alert-good  { background: var(--green-bg);  border: 1px solid rgba(61,214,140,.2);  color: #2ea870; }
+  .alert-info  { background: var(--blue-bg);   border: 1px solid rgba(66,179,245,.2);  color: #2e8fb5; }
+
+  /* ── HIGHLIGHT ROW ── */
+  .row-hl td { background: rgba(91,110,245,0.05); }
+  .row-hl td:first-child { border-left: 3px solid var(--accent); }
+
+  /* ── RULE ── */
+  .rule-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 12px;
+    line-height: 1.9;
+  }
+  .rule-box strong { color: var(--accent2); }
+
+  /* ── GRID 2 ── */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+  @media (max-width: 700px) { .grid2 { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .card-title {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .card-title::before { content: ''; display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+  /* ── DECISION TREE ── */
+  .tree {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 2.1;
+    color: var(--text2);
+    margin-top: 14px;
+  }
+  .tree .q  { color: #fff; font-weight: 700; }
+  .tree .yes{ color: var(--green); }
+  .tree .no { color: var(--red); }
+  .tree .go { color: var(--accent2); }
+  .tree .arrow { color: var(--text3); }
+
+  /* ── PRIORITY COL ── */
+  .pri { text-align: center; font-weight: 700; font-family: var(--mono); }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 28px;
+    border-top: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: .04em;
+  }
+  .footer span { color: var(--accent2); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-badge">PLAYWRIGHT · JAVASCRIPT · NIVEL 1</div>
+  <h1>🎭 Selector <span>Machete</span></h1>
+  <div class="header-sub">
+    <span>Carlos + Gemini</span>
+    <span>5 tablas de referencia</span>
+    <span>getByRole · aserciones · regex · encapsulamiento</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#t1">01 · Jerarquía</a>
+  <a href="#t2">02 · Roles ARIA + name</a>
+  <a href="#t3">03 · Posición + Encapsulamiento</a>
+  <a href="#t4">04 · Aserciones</a>
+  <a href="#t5">05 · Exacto vs Regex</a>
+</nav>
+
+<div class="container">
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- TABLA 1 -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <section class="section" id="t1">
+    <div class="section-header">
+      <span class="section-num">TABLA 01</span>
+      <h2 class="section-title">Jerarquía de Selectores</h2>
+      <span class="section-desc">¿cuál usar primero?</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:36px">#</th>
+            <th style="width:180px">Selector</th>
+            <th>Cuándo usarlo</th>
+            <th>Ejemplo listo para copiar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-hl">
+            <td class="pri"><span class="badge badge-green">1 ★</span></td>
+            <td><code>getByRole()</code><br><span style="color:var(--text3);font-size:11px;font-family:var(--mono)">← PRIMERA OPCIÓN</span></td>
+            <td>Botones, links, inputs, headings, checkboxes. Cualquier elemento con rol ARIA claro.</td>
+            <td>
+              <code>page.getByRole('button', { name: /login/i })</code><br>
+              <code>page.getByRole('textbox', { name: /usuario/i }).fill('admin')</code><br>
+              <code>page.getByRole('link', { name: /click here/i }).click()</code><br>
+              <code>page.getByRole('checkbox').nth(0).click()</code><br>
+              <code>page.getByRole('heading', { name: /título/i, level: 2 })</code>
+            </td>
+          </tr>
+          <tr>
+            <td class="pri"><span class="badge badge-blue">2</span></td>
+            <td><code>getByLabel()</code></td>
+            <td>Input con un <code>&lt;label&gt;</code> asociado en el HTML.</td>
+            <td>
+              <code>page.getByLabel('Usuario').fill('admin')</code><br>
+              <code>page.getByLabel('Contraseña').fill('1234')</code>
+            </td>
+          </tr>
+          <tr>
+            <td class="pri"><span class="badge badge-blue">3</span></td>
+            <td><code>getByText()</code></td>
+            <td>Validar mensajes, párrafos, texto visible. Cuando el elemento no tiene rol claro.</td>
+            <td>
+              <code>expect(page.getByText('You logged in')).toBeVisible()</code><br>
+              <code>page.getByText('Eliminar', { exact: true }).click()</code>
+            </td>
+          </tr>
+          <tr>
+            <td class="pri"><span class="badge badge-yellow">4</span></td>
+            <td><code>getByPlaceholder()</code></td>
+            <td>Inputs con texto gris pero sin label. "El dev fue perezoso."</td>
+            <td>
+              <code>page.getByPlaceholder('Buscar...').fill('prueba')</code><br>
+              <code>page.getByPlaceholder('Email').fill('test@test.com')</code>
+            </td>
+          </tr>
+          <tr>
+            <td class="pri"><span class="badge badge-yellow">5</span></td>
+            <td><code>getByTestId()</code><br><span style="color:var(--text3);font-size:11px;font-family:var(--mono)">← PACTO QA-DEV</span></td>
+            <td>HTML tiene atributo <code>data-testid="valor"</code>. Ideal cuando dev lo agrega.</td>
+            <td>
+              <code>page.getByTestId('boton-guardar').click()</code><br>
+              <code>page.getByTestId('input-email').fill('x@x.com')</code>
+            </td>
+          </tr>
+          <tr>
+            <td class="pri"><span class="badge badge-red">6</span></td>
+            <td><code>locator()</code><br><span style="color:var(--text3);font-size:11px;font-family:var(--mono)">← ÚLTIMO RECURSO</span></td>
+            <td>IDs o Clases CSS. También para encapsular búsquedas en un contenedor.</td>
+            <td>
+              <code>page.locator('#id-unico').click()</code><br>
+              <code>page.locator('#input-example input').fill('texto')</code><br>
+              <code>page.locator('.inventory_item').filter({ hasText: 'Backpack' })</code>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rule-box">
+      <strong>REGLA MENTAL:</strong>  Probá en orden 1 → 2 → 3 → 4 → 5 → 6. El primero que funcione, ese usás.<br>
+      <strong>TIP REGEX:   </strong>  Siempre preferí <code>/texto/i</code> en lugar de <code>'texto'</code> → ignora mayúsculas y espacios extra.
+    </div>
+
+    <div class="tree">
+      <span class="q">¿Tiene rol ARIA?</span> (button, link, textbox, checkbox, heading, img...)<br>
+      <span class="arrow">├── </span><span class="yes">SÍ</span>  <span class="arrow">→</span>  <span class="go">getByRole('rol', { name: /texto/i })</span><br>
+      <span class="arrow">└── </span><span class="no">NO</span>  <span class="arrow">→</span><br>
+      <span class="arrow">        </span>¿Tiene &lt;label&gt;?         <span class="arrow">→</span> <span class="go">getByLabel('texto')</span><br>
+      <span class="arrow">        </span>¿Tiene texto visible?    <span class="arrow">→</span> <span class="go">getByText('texto')</span><br>
+      <span class="arrow">        </span>¿Tiene placeholder?      <span class="arrow">→</span> <span class="go">getByPlaceholder('texto')</span><br>
+      <span class="arrow">        </span>¿Tiene data-testid?      <span class="arrow">→</span> <span class="go">getByTestId('id')</span><br>
+      <span class="arrow">        </span>¿Tiene ID o clase CSS?   <span class="arrow">→</span> <span class="go">locator('#id') / locator('.clase')</span><br>
+      <span class="arrow">        </span>¿Muchos iguales?         <span class="arrow">→</span> <span class="go">locator('.contenedor').filter({ hasText: 'X' }).getByRole(...)</span>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- TABLA 2 -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <section class="section" id="t2">
+    <div class="section-header">
+      <span class="section-num">TABLA 02</span>
+      <h2 class="section-title">Roles ARIA + ¿de dónde sale el <code style="font-size:16px">{ name }</code>?</h2>
+      <span class="section-desc">HTML → rol + nombre accesible</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Grupo</th>
+            <th>HTML</th>
+            <th>Rol Playwright</th>
+            <th>Ejemplo completo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="1" style="color:var(--text3);font-size:11px;font-family:var(--mono);font-weight:700;letter-spacing:.06em;text-transform:uppercase">TÍTULOS</td>
+            <td><code>&lt;h1&gt; / &lt;h2&gt; / ... / &lt;h6&gt;</code></td>
+            <td><span class="badge badge-purple">'heading'</span></td>
+            <td><code>getByRole('heading', { name: /mi título/i, level: 2 })</code></td>
+          </tr>
+          <tr>
+            <td rowspan="5" style="color:var(--text3);font-size:11px;font-family:var(--mono);font-weight:700;letter-spacing:.06em;text-transform:uppercase">INTERACTIVOS</td>
+            <td><code>&lt;button&gt;</code></td>
+            <td><span class="badge badge-green">'button'</span></td>
+            <td><code>getByRole('button', { name: /enviar/i })</code></td>
+          </tr>
+          <tr>
+            <td><code>&lt;a href="..."&gt;</code></td>
+            <td><span class="badge badge-green">'link'</span></td>
+            <td><code>getByRole('link', { name: /ir al inicio/i })</code></td>
+          </tr>
+          <tr>
+            <td><code>&lt;input type="checkbox"&gt;</code></td>
+            <td><span class="badge badge-green">'checkbox'</span></td>
+            <td><code>getByRole('checkbox')</code> <span style="color:var(--text3);font-size:11px">← rara vez lleva name</span></td>
+          </tr>
+          <tr>
+            <td><code>&lt;input type="radio"&gt;</code></td>
+            <td><span class="badge badge-green">'radio'</span></td>
+            <td><code>getByRole('radio', { name: /opción a/i })</code></td>
+          </tr>
+          <tr>
+            <td><code>&lt;select&gt;</code></td>
+            <td><span class="badge badge-green">'combobox'</span></td>
+            <td><code>getByRole('combobox', { name: /país/i })</code></td>
+          </tr>
+          <tr>
+            <td rowspan="4" style="color:var(--text3);font-size:11px;font-family:var(--mono);font-weight:700;letter-spacing:.06em;text-transform:uppercase">INPUTS / FORMS</td>
+            <td><code>&lt;input type="text"&gt;</code></td>
+            <td><span class="badge badge-blue">'textbox'</span></td>
+            <td><code>getByRole('textbox', { name: /usuario/i })</code></td>
+          </tr>
+          <tr>
+            <td><code>&lt;input type="password"&gt;</code></td>
+            <td><span class="badge badge-blue">'textbox'</span></td>
+            <td><code>getByRole('textbox', { name: /contraseña/i })</code></td>
+          </tr>
+          <tr>
+            <td><code>&lt;textarea&gt;</code></td>
+            <td><span class="badge badge-blue">'textbox'</span></td>
+            <td><code>getByRole('textbox', { name: /comentario/i })</code></td>
+          </tr>
+          <tr>
+            <td><code>&lt;form&gt;</code></td>
+            <td><span class="badge badge-blue">'form'</span></td>
+            <td><code>getByRole('form')</code></td>
+          </tr>
+          <tr>
+            <td rowspan="4" style="color:var(--text3);font-size:11px;font-family:var(--mono);font-weight:700;letter-spacing:.06em;text-transform:uppercase">ESTRUCTURA</td>
+            <td><code>&lt;img&gt;</code></td>
+            <td><span class="badge badge-yellow">'img'</span></td>
+            <td><code>getByRole('img', { name: /user avatar/i })</code></td>
+          </tr>
+          <tr>
+            <td><code>&lt;ul&gt; o &lt;ol&gt;</code></td>
+            <td><span class="badge badge-yellow">'list'</span></td>
+            <td><code>getByRole('list')</code></td>
+          </tr>
+          <tr>
+            <td><code>&lt;li&gt;</code></td>
+            <td><span class="badge badge-yellow">'listitem'</span></td>
+            <td><code>getByRole('listitem')</code></td>
+          </tr>
+          <tr>
+            <td><code>&lt;table&gt;</code></td>
+            <td><span class="badge badge-yellow">'table'</span></td>
+            <td><code>getByRole('table')</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="alert alert-warn" style="margin-top:14px">
+      <span class="alert-icon">⚠</span>
+      <span>Si el elemento es <code>&lt;div&gt;</code> o <code>&lt;span&gt;</code> sin rol → <strong>getByRole NO funciona</strong>. Pasá a <code>getByText()</code>, <code>getByTestId()</code> o <code>locator('.clase')</code>.</span>
+    </div>
+
+    <!-- PARTE B -->
+    <div style="margin-top:28px;margin-bottom:14px;font-size:13px;font-weight:700;color:#fff;letter-spacing:-.01em">
+      ¿De dónde sale el <code>{ name }</code>? — buscalo en este orden en el inspector
+    </div>
+    <div class="alert alert-info">
+      <span class="alert-icon">ℹ</span>
+      <span>El <code>{ name }</code> <strong>NO</strong> viene del atributo <code>name="..."</code> del HTML. Viene del <strong>nombre accesible</strong> del elemento.</span>
+    </div>
+
+    <div class="table-wrap" style="margin-top:12px">
+      <table>
+        <thead>
+          <tr>
+            <th>Prioridad</th>
+            <th>Fuente</th>
+            <th>HTML de ejemplo</th>
+            <th>name que escribís</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-hl">
+            <td><span class="badge badge-green">1 ★ mejor</span></td>
+            <td>Texto interno</td>
+            <td><code>&lt;button&gt;Enviar&lt;/button&gt;</code></td>
+            <td><code>{ name: /enviar/i }</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">2</span></td>
+            <td><code>&lt;label&gt;</code> asociado</td>
+            <td><code>&lt;label&gt;Usuario&lt;/label&gt;&lt;input id="u"&gt;</code></td>
+            <td><code>{ name: /usuario/i }</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">3</span></td>
+            <td><code>aria-label</code></td>
+            <td><code>&lt;button aria-label="Cerrar sesión"&gt;&lt;i/&gt;&lt;/button&gt;</code></td>
+            <td><code>{ name: /cerrar sesión/i }</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-yellow">4</span></td>
+            <td><code>placeholder</code></td>
+            <td><code>&lt;input placeholder="Escribe tu email"&gt;</code></td>
+            <td><code>{ name: /escribe tu email/i }</code></td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-yellow">5</span></td>
+            <td><code>alt</code> (solo imgs)</td>
+            <td><code>&lt;img alt="User Avatar"&gt;</code></td>
+            <td><code>{ name: /user avatar/i }</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">Cuándo no lleva { name }</div>
+        <div class="code-block"><span class="cm">// Checkbox sin label visible</span>
+<span class="fn">getByRole</span>(<span class="str">'checkbox'</span>).<span class="fn">nth</span>(<span class="re">0</span>)
+
+<span class="cm">// Único elemento de ese tipo</span>
+<span class="fn">getByRole</span>(<span class="str">'button'</span>) <span class="cm">← funciona igual</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">⚠ Trampa — toHaveAttribute con objeto</div>
+        <div class="code-block"><span class="bad">// ❌ INCORRECTO — falso positivo</span>
+.<span class="fn">toHaveAttribute</span>(<span class="str">'href'</span>, { name: <span class="str">'http://url.com'</span> })
+
+<span class="ok">// ✅ CORRECTO — string exacto</span>
+.<span class="fn">toHaveAttribute</span>(<span class="str">'href'</span>, <span class="str">'http://url.com/'</span>)
+
+<span class="ok">// ✅ CON REGEX — búsqueda parcial</span>
+.<span class="fn">toHaveAttribute</span>(<span class="str">'href'</span>, <span class="re">/elementalselenium/</span>)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- TABLA 3 -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <section class="section" id="t3">
+    <div class="section-header">
+      <span class="section-num">TABLA 03</span>
+      <h2 class="section-title">Posición y Encapsulamiento</h2>
+      <span class="section-desc">.first() .last() .nth() + Padre→Hijo</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Filtro</th>
+            <th>Qué hace</th>
+            <th>Ejemplo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>.first()</code></td>
+            <td>Primer elemento de la lista</td>
+            <td><code>page.getByRole('button', { name: /delete/i }).first().click()</code></td>
+          </tr>
+          <tr>
+            <td><code>.last()</code></td>
+            <td>Último elemento de la lista</td>
+            <td><code>page.getByRole('button', { name: /delete/i }).last().click()</code></td>
+          </tr>
+          <tr>
+            <td><code>.nth(0)</code></td>
+            <td>Primero (índice empieza en 0)</td>
+            <td><code>page.getByRole('checkbox').nth(0).click()</code></td>
+          </tr>
+          <tr>
+            <td><code>.nth(1)</code></td>
+            <td>Segundo</td>
+            <td><code>page.getByRole('checkbox').nth(1).click()</code></td>
+          </tr>
+          <tr>
+            <td><code>.nth(2)</code></td>
+            <td>Tercero</td>
+            <td><code>page.getByRole('button', { name: /delete/i }).nth(2).click()</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rule-box">
+      <strong>REGLA:</strong> nth(0) = first().  nth(último) = last().<br>
+      <strong>REGLA:</strong> Al borrar .nth(1), el que era el tercero pasa a ser el segundo → el siguiente .last() lo captura.
+    </div>
+
+    <div style="margin-top:28px;margin-bottom:14px;font-size:13px;font-weight:700;color:#fff">
+      Patrón Encapsulamiento — Padre → Hijo
+    </div>
+    <div class="alert alert-info">
+      <span class="alert-icon">💡</span>
+      <span><strong>Problema:</strong> Hay 10 botones "Add to cart" → Playwright lanza error de ambigüedad.<br>
+      <strong>Solución:</strong> Paso 1 → localizá el contenedor único. Paso 2 → buscá el elemento DENTRO.</span>
+    </div>
+    <div class="code-block"><span class="cm">// ❌ Ambiguo — hay 10 botones iguales</span>
+<span class="kw">await</span> page.<span class="fn">getByRole</span>(<span class="str">'button'</span>, { name: <span class="re">/add to cart/i</span> }).<span class="fn">click</span>() <span class="cm">// ERROR</span>
+
+<span class="cm">// ✅ Correcto — primero el contenedor, luego el botón dentro</span>
+<span class="kw">const</span> producto = page.<span class="fn">locator</span>(<span class="str">'.inventory_item'</span>).<span class="fn">filter</span>({ hasText: <span class="str">'Sauce Labs Backpack'</span> })
+<span class="kw">await</span> producto.<span class="fn">getByRole</span>(<span class="str">'button'</span>, { name: <span class="re">/add to cart/i</span> }).<span class="fn">click</span>()</div>
+
+    <div style="margin-top:20px">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Caso típico</th><th>Código</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Agregar 3 elementos de un click</td>
+            <td><code>page.getByRole('button', { name: /add/i }).click({ clickCount: 3 })</code></td>
+          </tr>
+          <tr>
+            <td>Validar que hay exactamente 3</td>
+            <td><code>expect(page.getByRole('button', { name: /delete/i })).toHaveCount(3)</code></td>
+          </tr>
+          <tr>
+            <td>Borrar el segundo</td>
+            <td><code>page.getByRole('button', { name: /delete/i }).nth(1).click()</code></td>
+          </tr>
+          <tr>
+            <td>Borrar el último que quedó</td>
+            <td><code>page.getByRole('button', { name: /delete/i }).last().click()</code></td>
+          </tr>
+          <tr>
+            <td>Botón dentro de fila de tabla</td>
+            <td>
+              <code>const fila = page.getByRole('row').filter({ hasText: 'Carlos' })</code><br>
+              <code>await fila.getByRole('button', { name: /editar/i }).click()</code>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- TABLA 4 -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <section class="section" id="t4">
+    <div class="section-header">
+      <span class="section-num">TABLA 04</span>
+      <h2 class="section-title">Aserciones <code style="font-size:16px">expect()</code></h2>
+      <span class="section-desc">qué validan + trampas + auto-waiting</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Aserción</th>
+            <th>Qué valida</th>
+            <th>Ejemplo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>toBeVisible()</code></td>
+            <td>Visible en pantalla</td>
+            <td><code>await expect(locator).toBeVisible()</code></td>
+          </tr>
+          <tr>
+            <td><code>not.toBeVisible()</code></td>
+            <td>NO es visible</td>
+            <td><code>await expect(locator).not.toBeVisible()</code></td>
+          </tr>
+          <tr>
+            <td><code>toHaveText('texto')</code></td>
+            <td>Texto idéntico — más estricto</td>
+            <td><code>await expect(locator).toHaveText('You entered: T')</code></td>
+          </tr>
+          <tr>
+            <td><code>toContainText('texto')</code></td>
+            <td>Contiene esa cadena — parcial</td>
+            <td><code>await expect(locator).toContainText('logged in')</code></td>
+          </tr>
+          <tr>
+            <td><code>toBeChecked()</code></td>
+            <td>Checkbox/radio marcado</td>
+            <td><code>await expect(locator).toBeChecked()</code></td>
+          </tr>
+          <tr>
+            <td><code>not.toBeChecked()</code></td>
+            <td>Checkbox/radio NO marcado</td>
+            <td><code>await expect(locator).not.toBeChecked()</code></td>
+          </tr>
+          <tr>
+            <td><code>toBeDisabled()</code></td>
+            <td>Elemento deshabilitado</td>
+            <td><code>await expect(locator).toBeDisabled()</code></td>
+          </tr>
+          <tr>
+            <td><code>toBeEnabled()</code></td>
+            <td>Habilitado e interactuable</td>
+            <td><code>await expect(locator).toBeEnabled()</code></td>
+          </tr>
+          <tr>
+            <td><code>toBeEnabled({ timeout: 10000 })</code></td>
+            <td>Idem, con espera extendida</td>
+            <td><code>await expect(locator).toBeEnabled({ timeout: 10000 })</code></td>
+          </tr>
+          <tr class="row-hl">
+            <td><code>toHaveCount(n)</code></td>
+            <td>Lista tiene exactamente n elementos <strong style="color:var(--green)">con auto-retry</strong></td>
+            <td><code>await expect(locator).toHaveCount(3)</code></td>
+          </tr>
+          <tr>
+            <td><code>toHaveAttribute('attr', 'val')</code></td>
+            <td>Atributo tiene ese valor exacto</td>
+            <td><code>await expect(locator).toHaveAttribute('target', '_blank')</code></td>
+          </tr>
+          <tr>
+            <td><code>toHaveAttribute('attr', /regex/)</code></td>
+            <td>Atributo contiene el patrón</td>
+            <td><code>await expect(locator).toHaveAttribute('href', /selenium/)</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="card-title">⚠ Trampa — count() sin auto-retry</div>
+        <div class="code-block"><span class="bad">// ❌ INCORRECTO — sin auto-retry</span>
+<span class="fn">expect</span>(locator).<span class="fn">count</span>() === <span class="re">0</span>
+<span class="cm">// Si el DOM tarda → falla aunque luego sea correcto</span>
+
+<span class="ok">// ✅ CORRECTO — con auto-retry</span>
+<span class="kw">await</span> <span class="fn">expect</span>(locator).<span class="fn">toHaveCount</span>(<span class="re">0</span>)</div>
+      </div>
+      <div class="card">
+        <div class="card-title">💡 Auto-Waiting — cómo funciona</div>
+        <div class="code-block"><span class="cm">// Playwright espera hasta 5 seg por defecto</span>
+<span class="cm">// No necesitás waitForTimeout() ni page.pause()</span>
+
+<span class="cm">// Si el server es lento → extendé el tiempo</span>
+.<span class="fn">toBeEnabled</span>({ timeout: <span class="re">10000</span> }) <span class="cm">// 10 seg</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th colspan="2">Métodos de acción — referencia rápida</th></tr></thead>
+        <tbody>
+          <tr><td><code>.click()</code></td><td>Clic simple</td></tr>
+          <tr><td><code>.click({ clickCount: 3 })</code></td><td>3 clics en una sola línea</td></tr>
+          <tr><td><code>.fill('texto')</code></td><td>Escribe directo (como pegar), sin simular teclado</td></tr>
+          <tr><td><code>.pressSequentially('TEXTO')</code></td><td>Simula tecla por tecla (activa key listeners del DOM)</td></tr>
+          <tr><td><code>.press('Escape')</code></td><td>Tecla especial: Enter, Escape, Tab, Backspace, ArrowDown...</td></tr>
+          <tr><td><code>.hover()</code></td><td>Mueve el mouse encima (revela tooltips y menús ocultos)</td></tr>
+          <tr><td><code>.selectOption('valor')</code></td><td>Selecciona una opción de un <code>&lt;select&gt;</code></td></tr>
+          <tr><td><code>page.goto('https://...')</code></td><td>Navega a la URL</td></tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- TABLA 5 -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <section class="section" id="t5">
+    <div class="section-header">
+      <span class="section-num">TABLA 05</span>
+      <h2 class="section-title">Texto Exacto vs Regex</h2>
+      <span class="section-desc">cuándo usar cada uno</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Sintaxis</th>
+            <th>Encuentra</th>
+            <th>No encuentra</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="badge badge-accent">Parcial (default)</span></td>
+            <td><code>getByText('Log')</code></td>
+            <td style="color:var(--green)">Login, Logout, Logging</td>
+            <td style="color:var(--text3)">—</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-blue">Exacto</span></td>
+            <td><code>getByText('Login', { exact: true })</code></td>
+            <td style="color:var(--green)">Solo 'Login'</td>
+            <td style="color:var(--red)">'Login Now', ' Login '</td>
+          </tr>
+          <tr>
+            <td><span class="badge badge-yellow">Regex</span></td>
+            <td><code>{ name: /login/ }</code></td>
+            <td style="color:var(--green)">login, Login, LOGIN</td>
+            <td style="color:var(--text3)">—</td>
+          </tr>
+          <tr class="row-hl">
+            <td><span class="badge badge-green">Regex /i ★</span></td>
+            <td><code>{ name: /login/i }</code></td>
+            <td style="color:var(--green)">Login, LOGIN, login, lOgIn</td>
+            <td style="color:var(--text3)">—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="rule-box">
+      <strong>REGLA:</strong> En <code>{ name }</code> de getByRole → SIEMPRE usá <code>/regex/i</code>. Evita errores por espacios o mayúsculas.<br>
+      <strong>REGLA:</strong> <code>{ exact: true }</code> solo aplica en <code>getByText()</code> y <code>getByLabel()</code>, NO dentro de <code>{ name }</code> de getByRole.
+    </div>
+
+    <div style="margin-top:20px">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Caso práctico</th><th>Código listo para copiar</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Botón con texto visible</td>
+            <td><code>page.getByRole('button', { name: /enviar/i })</code></td>
+          </tr>
+          <tr>
+            <td>Input con label</td>
+            <td><code>page.getByRole('textbox', { name: /usuario/i })</code></td>
+          </tr>
+          <tr>
+            <td>Link con texto parcial</td>
+            <td><code>page.getByRole('link', { name: /elemental/i })</code></td>
+          </tr>
+          <tr>
+            <td>Validar texto exacto en pantalla</td>
+            <td><code>await expect(locator).toHaveText('You entered: ESCAPE')</code></td>
+          </tr>
+          <tr>
+            <td>Validar que contiene parte del texto</td>
+            <td><code>await expect(locator).toContainText('logged in')</code></td>
+          </tr>
+          <tr>
+            <td>Atributo con URL exacta</td>
+            <td><code>await expect(locator).toHaveAttribute('href', 'http://url.com/')</code></td>
+          </tr>
+          <tr>
+            <td>Atributo con URL parcial</td>
+            <td><code>await expect(locator).toHaveAttribute('href', /elementalselenium/)</code></td>
+          </tr>
+          <tr>
+            <td>Exacto en getByText</td>
+            <td><code>page.getByText('Eliminar', { exact: true })</code></td>
+          </tr>
+          <tr>
+            <td>Distinguir "Log" de "Login"</td>
+            <td><code>page.getByText('Log', { exact: true })</code> <span style="color:var(--text3);font-size:11px">← solo encuentra 'Log'</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    </div>
+
+    <div class="alert alert-warn" style="margin-top:14px">
+      <span class="alert-icon">⚠</span>
+      <div>
+        <strong>Trampa del falso positivo:</strong><br>
+        <code>toHaveAttribute('href', { name: 'http://url.com', exact: true })</code><br>
+        El test puede <strong>PASAR</strong> aunque la URL sea diferente — solo verifica que el atributo exista.<br><br>
+        <strong>Prueba de fuego:</strong> Cambiá la URL dentro del objeto por <code>'https://google.com'</code>. Si el test sigue pasando → está mal escrito. Usá string o regex.
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="footer">
+  🎭 Playwright · JavaScript · Nivel 1 &nbsp;|&nbsp; <span>Carlos + Gemini</span> &nbsp;|&nbsp; 5 tablas de referencia
+</div>
+
+</body>
+</html>

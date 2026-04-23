@@ -1,0 +1,71 @@
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║         🎭  PLAYWRIGHT — TABLA 2: ROLES ARIA + DE DÓNDE SALE EL { name }                          ║
+║                                                            JavaScript  |  Carlos + Gemini           ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PARTE A  ▶  DICCIONARIO DE ROLES ARIA — HTML → rol Playwright
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ GRUPO           │ HTML                          │ ROL             │ EJEMPLO COMPLETO
+─────────────────┼───────────────────────────────┼─────────────────┼──────────────────────────────────────────────────────────
+ TÍTULOS         │ <h1> / <h2> / ... / <h6>      │ 'heading'       │ getByRole('heading', { name: /mi título/i, level: 2 })
+─────────────────┼───────────────────────────────┼─────────────────┼──────────────────────────────────────────────────────────
+ INTERACTIVOS    │ <button>                       │ 'button'        │ getByRole('button', { name: /enviar/i })
+                 │ <a href="...">                 │ 'link'          │ getByRole('link', { name: /ir al inicio/i })
+                 │ <input type="checkbox">        │ 'checkbox'      │ getByRole('checkbox')  ← rara vez lleva name
+                 │ <input type="radio">           │ 'radio'         │ getByRole('radio', { name: /opción a/i })
+                 │ <select>                       │ 'combobox'      │ getByRole('combobox', { name: /país/i })
+─────────────────┼───────────────────────────────┼─────────────────┼──────────────────────────────────────────────────────────
+ INPUTS / FORMS  │ <input type="text">            │ 'textbox'       │ getByRole('textbox', { name: /usuario/i })
+                 │ <input type="password">        │ 'textbox'       │ getByRole('textbox', { name: /contraseña/i })
+                 │ <textarea>                     │ 'textbox'       │ getByRole('textbox', { name: /comentario/i })
+                 │ <form>                         │ 'form'          │ getByRole('form')
+─────────────────┼───────────────────────────────┼─────────────────┼──────────────────────────────────────────────────────────
+ ESTRUCTURA      │ <img>                          │ 'img'           │ getByRole('img', { name: /user avatar/i })
+                 │ <ul> o <ol>                    │ 'list'          │ getByRole('list')
+                 │ <li>                           │ 'listitem'      │ getByRole('listitem')
+                 │ <table>                        │ 'table'         │ getByRole('table')
+─────────────────┴───────────────────────────────┴─────────────────┴──────────────────────────────────────────────────────────
+
+ ⚠  Si el elemento es <div> o <span> sin rol → getByRole NO funciona.
+    Pasá a getByText(), getByTestId() o locator('.clase').
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ PARTE B  ▶  ¿DE DÓNDE SALE EL { name }? — buscalo en este orden en el inspector
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+
+
+
+ El { name } NO viene del atributo name="..." del HTML.
+ Viene del NOMBRE ACCESIBLE del elemento. Orden de búsqueda:
+
+ PRIORIDAD │ FUENTE              │ HTML DE EJEMPLO                                   │ name QUE ESCRIBÍS
+───────────┼─────────────────────┼───────────────────────────────────────────────────┼───────────────────────────────
+ 1 ★ mejor │ Texto interno       │ <button>Enviar</button>                           │ { name: /enviar/i }
+ 2         │ <label> asociado    │ <label>Usuario</label><input id="u">              │ { name: /usuario/i }
+ 3         │ aria-label          │ <button aria-label="Cerrar sesión"><i/></button>  │ { name: /cerrar sesión/i }
+ 4         │ placeholder         │ <input placeholder="Escribe tu email">            │ { name: /escribe tu email/i }
+ 5         │ alt  (solo imgs)    │ <img alt="User Avatar">                           │ { name: /user avatar/i }
+───────────┴─────────────────────┴───────────────────────────────────────────────────┴───────────────────────────────
+
+
+
+
+ ¿CUÁNDO NO LLEVA { name }?
+ • Checkbox sin label visible              → getByRole('checkbox').nth(0)
+ • Único elemento de ese tipo en la página → getByRole('button')  ← funciona, pero agregá name igual
+
+ ¿CUÁNDO NO SE PUEDE USAR getByRole?
+ • El elemento no tiene NINGUNA de las 5 fuentes → olvidate de getByRole, usá locator()
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ⚠  TRAMPA COMÚN — toHaveAttribute() con objeto
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ INCORRECTO → toHaveAttribute('href', { name: 'http://url.com', exact: true })
+              El 2do argumento NO acepta objeto. El test puede pasar sin validar nada (falso positivo).
+
+ CORRECTO   → toHaveAttribute('href', 'http://elementalselenium.com/')   ← string exacto
+ CON REGEX  → toHaveAttribute('href', /elementalselenium/)               ← búsqueda parcial

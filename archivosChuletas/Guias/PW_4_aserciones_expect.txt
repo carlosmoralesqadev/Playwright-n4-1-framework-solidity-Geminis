@@ -1,0 +1,62 @@
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║         🎭  PLAYWRIGHT — TABLA 4: ASERCIONES (expect)                                              ║
+║         Qué validan, cuándo usarlas y trampas frecuentes   JavaScript  |  Carlos + Gemini          ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ASERCIONES — referencia rápida
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ ASERCIÓN                                  │ QUÉ VALIDA                                │ EJEMPLO
+───────────────────────────────────────────┼───────────────────────────────────────────┼──────────────────────────────────────────────────────
+ toBeVisible()                             │ Visible en pantalla                       │ await expect(locator).toBeVisible()
+ not.toBeVisible()                         │ NO es visible                             │ await expect(locator).not.toBeVisible()
+ toHaveText('texto exacto')                │ Texto idéntico — más estricto             │ await expect(locator).toHaveText('You entered: T')
+ toContainText('texto')                    │ Contiene esa cadena — parcial             │ await expect(locator).toContainText('logged in')
+ toBeChecked()                             │ Checkbox/radio marcado                    │ await expect(locator).toBeChecked()
+ not.toBeChecked()                         │ Checkbox/radio NO marcado                 │ await expect(locator).not.toBeChecked()
+ toBeDisabled()                            │ Elemento deshabilitado (attr disabled)    │ await expect(locator).toBeDisabled()
+ toBeEnabled()                             │ Elemento habilitado e interactuable       │ await expect(locator).toBeEnabled()
+ toBeEnabled({ timeout: 10000 })           │ Idem, con espera extendida (server lento) │ await expect(locator).toBeEnabled({ timeout: 10000 })
+ toHaveCount(n)                            │ Lista tiene exactamente n elementos       │ await expect(locator).toHaveCount(3)
+ toHaveAttribute('attr', 'valor')          │ Atributo tiene ese valor (string exacto)  │ await expect(locator).toHaveAttribute('target', '_blank')
+ toHaveAttribute('attr', /regex/)          │ Atributo contiene el patrón               │ await expect(locator).toHaveAttribute('href', /selenium/)
+───────────────────────────────────────────┴───────────────────────────────────────────┴──────────────────────────────────────────────────────
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ⚠  TRAMPAS FRECUENTES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ ❌  INCORRECTO → await expect(locator).count() === 0
+     No tiene auto-retry. Si el DOM tarda en actualizarse, el test falla aunque luego sea correcto.
+
+ ✅  CORRECTO   → await expect(locator).toHaveCount(0)
+     Con auto-retry: Playwright espera hasta 5 seg a que la condición se cumpla.
+
+ ❌  INCORRECTO → toHaveAttribute('href', { name: 'http://url.com', exact: true })
+     El 2do arg no acepta objeto. El test puede pasar sin validar nada (falso positivo peligroso).
+
+ ✅  CORRECTO   → toHaveAttribute('href', 'http://elementalselenium.com/')
+ ✅  CON REGEX  → toHaveAttribute('href', /elementalselenium/)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ 💡  AUTO-WAITING — cómo funciona
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ • Playwright espera automáticamente hasta 5 segundos a que el elemento cumpla la condición.
+ • NO necesitás poner waitForTimeout() ni page.pause() en la mayoría de casos.
+ • Si el servidor de pruebas es lento → extendé con { timeout: 10000 } (10 segundos).
+ • Las aserciones de tipo expect() TIENEN auto-retry.  .count() solo NO tiene.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ MÉTODOS DE ACCIÓN (bonus — van junto a las aserciones)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ .click()                     → clic simple
+ .click({ clickCount: 3 })    → 3 clics en una sola línea
+ .fill('texto')               → escribe directo (como pegar), sin simular teclado
+ .pressSequentially('TEXTO')  → simula tecla por tecla (activa key listeners del DOM)
+ .press('Escape')             → tecla especial: Enter, Escape, Tab, Backspace, ArrowDown...
+ .hover()                     → mueve el mouse encima (revela tooltips y menús ocultos)
+ .selectOption('valor')       → selecciona una opción de un <select>
+ page.goto('https://...')     → navega a la URL

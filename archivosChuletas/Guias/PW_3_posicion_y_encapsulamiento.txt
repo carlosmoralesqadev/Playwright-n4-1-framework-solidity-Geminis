@@ -1,0 +1,51 @@
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║         🎭  PLAYWRIGHT — TABLA 3: FILTROS DE POSICIÓN Y ENCAPSULAMIENTO                            ║
+║         .first()  .last()  .nth()  +  Patrón Padre→Hijo       JavaScript  |  Carlos + Gemini       ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ FILTROS DE POSICIÓN — cuando hay múltiples elementos iguales
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ FILTRO      │ QUÉ HACE                       │ EJEMPLO
+─────────────┼────────────────────────────────┼───────────────────────────────────────────────────────────────
+ .first()    │ Primer elemento de la lista    │ page.getByRole('button', { name: /delete/i }).first().click()
+ .last()     │ Último elemento de la lista    │ page.getByRole('button', { name: /delete/i }).last().click()
+ .nth(0)     │ Primero  (índice empieza en 0) │ page.getByRole('checkbox').nth(0).click()
+ .nth(1)     │ Segundo                        │ page.getByRole('checkbox').nth(1).click()
+ .nth(2)     │ Tercero                        │ page.getByRole('button', { name: /delete/i }).nth(2).click()
+─────────────┴────────────────────────────────┴───────────────────────────────────────────────────────────────
+
+ REGLA: nth(0) = first().  nth(último) = last().
+ REGLA: Al borrar .nth(1), el que era el tercero pasa a ser el segundo → el siguiente .last() lo captura.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ENCAPSULAMIENTO — Patrón Padre → Hijo
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ PROBLEMA: Hay 10 botones "Add to cart" en la página → Playwright lanza error de ambigüedad.
+
+ SOLUCIÓN:  Paso 1 → localizá el contenedor único (la card del producto).
+            Paso 2 → buscá el botón DENTRO de ese contenedor.
+
+ EJEMPLO:
+   const producto = page.locator('.inventory_item').filter({ hasText: 'Sauce Labs Backpack' })
+   await producto.getByRole('button', { name: /add to cart/i }).click()
+
+ VENTAJA: Si el orden de los productos cambia, el test sigue funcionando.
+          Más robusto que usar .nth(0) a ciegas.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ CASOS TÍPICOS CON SU SOLUCIÓN
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ CASO                              │ CÓDIGO
+───────────────────────────────────┼───────────────────────────────────────────────────────────────────
+ Agregar 3 elementos de un click   │ await page.getByRole('button', { name: /add/i }).click({ clickCount: 3 })
+ Validar que hay exactamente 3     │ await expect(page.getByRole('button', { name: /delete/i })).toHaveCount(3)
+ Borrar el segundo                 │ await page.getByRole('button', { name: /delete/i }).nth(1).click()
+ Borrar el último que quedó        │ await page.getByRole('button', { name: /delete/i }).last().click()
+ Validar que quedó solo 1          │ await expect(page.getByRole('button', { name: /delete/i })).toHaveCount(1)
+ Botón dentro de una fila de tabla │ const fila = page.getByRole('row').filter({ hasText: 'Carlos' })
+                                   │ await fila.getByRole('button', { name: /editar/i }).click()
+───────────────────────────────────┴───────────────────────────────────────────────────────────────────

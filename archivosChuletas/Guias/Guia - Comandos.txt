@@ -1,0 +1,123 @@
+🎭 PLAYWRIGHT - COMANDOS MÁS USADOS (CON EXPLICACIÓN)
+
+---
+npm init playwright@latest
+
+
+npx playwright test
+// Ejecuta todos los tests del proyecto.
+
+npx playwright test archivo.spec.js
+// Ejecuta un archivo de test específico.
+
+npx playwright test --project=chromium
+// Ejecuta los tests solo en el navegador Chromium (Chrome).
+
+//* Ejecutar lento (1.5s entre acciones)
+HEADED=1 npx playwright test --headed
+
+npx playwright test --headed
+// Ejecuta los tests mostrando el navegador (no headless).
+
+npx playwright test --debug
+// Ejecuta los tests en modo debug (pausa y permite inspeccionar paso a paso).
+
+npx playwright test --ui
+// Abre la interfaz visual interactiva para ejecutar y depurar tests.
+
+---
+
+⏱️ CONTROL DE EJECUCIÓN
+
+npx playwright test --timeout=60000
+// Define el tiempo máximo de espera por test (en milisegundos).
+
+npx playwright test --retries=2
+// Reintenta automáticamente los tests fallidos (2 veces).
+
+npx playwright test --workers=1
+// Ejecuta los tests en un solo hilo (útil para debugging).
+
+npx playwright test --max-failures=1
+// Detiene la ejecución cuando ocurre el primer error.
+
+---
+
+🔍 FILTRADO DE TESTS
+
+npx playwright test -g "texto"
+// Ejecuta solo los tests que coincidan con ese texto.
+
+npx playwright test --grep @smoke
+// Ejecuta tests etiquetados como @smoke.
+
+npx playwright test --grep-invert @skip
+// Ejecuta todos excepto los que tengan la etiqueta @skip.
+
+---
+
+📊 REPORTES
+
+npx playwright show-report
+// Abre el reporte HTML de la última ejecución.
+
+npx playwright test --reporter=html
+// Genera un reporte en formato HTML.
+
+npx playwright test --reporter=list
+// Muestra resultados en formato lista en la consola.
+
+---
+
+🧪 CODEGEN (GENERADOR DE TESTS)
+
+npx playwright codegen
+// Abre el grabador para generar tests automáticamente.
+
+npx playwright codegen https://example.com
+// Abre una web y genera código automáticamente mientras navegás.
+
+---
+
+🌐 NAVEGADORES
+
+npx playwright install
+// Instala todos los navegadores necesarios.
+
+npx playwright install chromium
+// Instala solo Chromium.
+
+npx playwright install-deps
+// Instala dependencias necesarias del sistema.
+
+---
+
+🧹 DEBUG AVANZADO
+
+npx playwright test --trace=on
+// Graba todo lo que ocurre durante el test.
+
+npx playwright test --trace=retain-on-failure
+// Guarda trazas solo cuando falla un test.
+
+npx playwright test --video=on
+// Graba video de la ejecución de los tests.
+
+npx playwright test --screenshot=on
+// Toma capturas de pantalla durante los tests.
+
+---
+
+📦 INICIALIZACIÓN
+
+npx playwright init
+// Crea la estructura inicial de un proyecto Playwright.
+
+---
+
+🔎 ANÁLISIS DE ERRORES
+
+npx playwright show-trace trace.zip
+// Abre una traza grabada para analizar errores paso a paso.
+
+---

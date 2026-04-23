@@ -1,0 +1,55 @@
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║         🎭  PLAYWRIGHT — TABLA 5: TEXTO EXACTO vs REGEX                                            ║
+║         Cuándo usar cada uno y cómo no equivocarse        JavaScript  |  Carlos + Gemini            ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ COMPARATIVA — string, exact y regex
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ TIPO               │ SINTAXIS                               │ ENCUENTRA              │ NO ENCUENTRA
+────────────────────┼────────────────────────────────────────┼────────────────────────┼────────────────────────
+ Parcial (default)  │ getByText('Log')                       │ Login, Logout, Logging │ —
+ Exacto             │ getByText('Login', { exact: true })    │ Solo 'Login'           │ 'Login Now', ' Login '
+ Regex parcial      │ { name: /login/ }                      │ login, Login, LOGIN    │ —  (pero no ignora ñ)
+ Regex con /i       │ { name: /login/i }                     │ Login, LOGIN, login    │ —
+────────────────────┴────────────────────────────────────────┴────────────────────────┴────────────────────────
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ REGLAS CLAVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ • En { name } de getByRole  → SIEMPRE usá /regex/i.  Evita errores por espacios o mayúsculas.
+ • { exact: true } solo aplica en getByText() y getByLabel(), NO dentro de { name } de getByRole.
+ • /texto/i = la i al final ignora mayúsculas/minúsculas (case-insensitive).
+ • /texto/  = busca la cadena tal cual, respeta mayúsculas.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ CASOS PRÁCTICOS — ejemplos listos para copiar
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ CASO                                        │ CÓDIGO
+─────────────────────────────────────────────┼──────────────────────────────────────────────────────────────────
+ Botón con texto visible                     │ page.getByRole('button', { name: /enviar/i })
+ Input con label                             │ page.getByRole('textbox', { name: /usuario/i })
+ Link con texto parcial                      │ page.getByRole('link', { name: /elemental/i })
+ Validar texto exacto en pantalla            │ await expect(locator).toHaveText('You entered: ESCAPE')
+ Validar que contiene parte del texto        │ await expect(locator).toContainText('logged in')
+ Atributo con URL exacta                     │ await expect(locator).toHaveAttribute('href', 'http://url.com/')
+ Atributo con URL parcial (regex)            │ await expect(locator).toHaveAttribute('href', /elementalselenium/)
+ Texto exacto en getByText                   │ page.getByText('Eliminar', { exact: true })
+ Distinguir "Log" de "Login" en getByText    │ page.getByText('Log', { exact: true })  ← solo encuentra 'Log'
+─────────────────────────────────────────────┴──────────────────────────────────────────────────────────────────
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ⚠  TRAMPA DEL FALSO POSITIVO — toHaveAttribute con objeto
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ ❌  toHaveAttribute('href', { name: 'http://url.com', exact: true })
+     El test puede PASAR aunque la URL sea diferente. Solo verifica que el atributo exista.
+
+ ✅  toHaveAttribute('href', 'http://elementalselenium.com/')   ← string exacto
+ ✅  toHaveAttribute('href', /elementalselenium/)               ← regex parcial
+
+ PRUEBA DE FUEGO: Cambiá la URL dentro del objeto por 'https://google.com'.
+                 Si el test sigue pasando → está mal escrito. Usá string o regex.

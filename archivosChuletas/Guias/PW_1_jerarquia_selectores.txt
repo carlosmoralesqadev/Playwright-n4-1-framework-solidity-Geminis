@@ -1,0 +1,47 @@
+╔══════════════════════════════════════════════════════════════════════════════════════════════════════╗
+║              🎭  PLAYWRIGHT — TABLA 1: JERARQUÍA DE SELECTORES                                       ║
+║              ¿Cuál usar primero y cuándo?          JavaScript  |  Carlos + Gemini                    ║
+╚══════════════════════════════════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ #  │ SELECTOR            │ CUÁNDO USARLO                              │ EJEMPLO LISTO PARA COPIAR
+────┼─────────────────────┼────────────────────────────────────────────┼────────────────────────────────────────────────────────────────
+ 1  │ getByRole()         │ Botones, links, inputs, headings,          │ page.getByRole('button', { name: /login/i })
+    │  ← PRIMERA OPCIÓN   │ checkboxes. Cualquier elem. con rol claro  │ page.getByRole('textbox', { name: /usuario/i }).fill('admin')
+    │                     │                                            │ page.getByRole('link', { name: /click here/i }).click()
+    │                     │                                            │ page.getByRole('checkbox').nth(0).click()
+    │                     │                                            │ page.getByRole('heading', { name: /título/i, level: 2 })
+────┼─────────────────────┼────────────────────────────────────────────┼────────────────────────────────────────────────────────────────
+ 2  │ getByLabel()        │ Input con un <label> asociado en el HTML   │ page.getByLabel('Usuario').fill('admin')
+    │                     │ Alternativa limpia a getByRole + name      │ page.getByLabel('Contraseña').fill('1234')
+────┼─────────────────────┼────────────────────────────────────────────┼────────────────────────────────────────────────────────────────
+ 3  │ getByText()         │ Validar mensajes, párrafos, texto visible  │ expect(page.getByText('You logged in')).toBeVisible()
+    │                     │ Cuando el elemento no tiene rol claro      │ page.getByText('Eliminar', { exact: true }).click()
+────┼─────────────────────┼────────────────────────────────────────────┼────────────────────────────────────────────────────────────────
+ 4  │ getByPlaceholder()  │ Inputs con texto gris pero sin label       │ page.getByPlaceholder('Buscar...').fill('prueba')
+    │                     │ "El dev fue perezoso y no puso label"      │ page.getByPlaceholder('Email').fill('test@test.com')
+────┼─────────────────────┼────────────────────────────────────────────┼────────────────────────────────────────────────────────────────
+ 5  │ getByTestId()       │ HTML tiene atributo data-testid="valor"    │ page.getByTestId('boton-guardar').click()
+    │  ← PACTO QA-DEV     │ Ideal cuando el equipo dev lo agrega       │ page.getByTestId('input-email').fill('x@x.com')
+────┼─────────────────────┼────────────────────────────────────────────┼────────────────────────────────────────────────────────────────
+ 6  │ locator()           │ ÚLTIMO RECURSO: usa ID o Clase CSS         │ page.locator('#id-unico').click()
+    │  ← ÚLTIMO RECURSO   │ También para encapsular búsquedas          │ page.locator('#input-example input').fill('texto')
+    │                     │ Filtrar dentro de un contenedor            │ page.locator('.inventory_item').filter({ hasText: 'Backpack' })
+────┴─────────────────────┴────────────────────────────────────────────┴────────────────────────────────────────────────────────────────
+
+ REGLA MENTAL: Probá en orden 1→2→3→4→5→6. El primero que funcione, ese usás.
+ TIP REGEX:    Siempre preferí /texto/i en lugar de 'texto' → ignora mayúsculas y espacios extra.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ ÁRBOL DE DECISIÓN RÁPIDO
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ¿Tiene rol ARIA? (button, link, textbox, checkbox, heading, img...)
+  ├── SÍ  →  getByRole('rol', { name: /texto/i })
+  └── NO  →
+        ¿Tiene <label>?        → getByLabel('texto')
+        ¿Tiene texto visible?  → getByText('texto')
+        ¿Tiene placeholder?    → getByPlaceholder('texto')
+        ¿Tiene data-testid?    → getByTestId('id')
+        ¿Tiene ID o clase?     → locator('#id') / locator('.clase')
+        ¿Muchos iguales?       → locator('.contenedor').filter({ hasText: 'X' }).getByRole(...)

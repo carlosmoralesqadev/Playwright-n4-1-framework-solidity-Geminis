@@ -1,0 +1,52 @@
+
+**Los ajustes más comunes que vas a hacer al código del codegen:**
+
+En proyectos reales lo ideal es que los devs pongan data-test en todo — es un acuerdo entre QA y desarrollo. 
+Cuando eso existe, getByTestId siempre gana.
+
+**La regla práctica real:**
+¿El elemento tiene data-test?  →  getByTestId  (más robusto)
+¿No tiene data-test?           →  getByRole    (segunda opción)
+¿El texto nunca va a cambiar?  →  getByRole está bien
+¿El texto PUEDE cambiar?       →  getByTestId  (más seguro)
+
+╔══════════════════════════════════════════════════════════════════════════════╗
+║           AJUSTES MÁS COMUNES AL CÓDIGO DEL CODEGEN                          ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║                                                                              ║
+║  CODEGEN GENERA                    →  VOS LO CAMBIÁS POR                     ║
+║                                                                              ║
+║  locator('[data-test="x"]')        →  getByTestId('x')                       ║
+║  CUÁNDO: siempre que exista data-test o data-testid                          ║
+║                                                                              ║
+║  ─────────────────────────────────────────────────────────────────────────   ║
+║                                                                              ║
+║  locator('button:text("Login")')   →  getByRole('button', {name: 'Login'})   ║
+║  CUÁNDO: siempre para botones, links, checkboxes                             ║
+║                                                                              ║
+║  ─────────────────────────────────────────────────────────────────────────   ║
+║                                                                              ║
+║  locator('text=Docs')              →  getByText('Docs')                      ║
+║  CUÁNDO: cualquier texto visible en pantalla                                 ║
+║                                                                              ║
+║  ─────────────────────────────────────────────────────────────────────────   ║
+║                                                                              ║
+║  locator('#email')                 →  getByLabel('Email')                    ║
+║  CUÁNDO: el input tiene un <label> asociado visible                          ║
+║                                                                              ║
+║  ─────────────────────────────────────────────────────────────────────────   ║
+║                                                                              ║
+║  locator('#email')                 →  getByTestId('email')                   ║
+║  CUÁNDO: no hay label pero sí tiene data-test                                ║
+║                                                                              ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+║  REGLA RÁPIDA                                                                ║
+║                                                                              ║
+║  ¿Botón o link?           →  getByRole()                                     ║
+║  ¿Input con label?        →  getByLabel()                                    ║
+║  ¿Texto visible?          →  getByText()                                     ║
+║  ¿Tiene data-test?        →  getByTestId()                                   ║
+║  ¿Nada de lo anterior?    →  locator()  ← último recurso                     ║
+╚══════════════════════════════════════════════════════════════════════════════╝
+
+
