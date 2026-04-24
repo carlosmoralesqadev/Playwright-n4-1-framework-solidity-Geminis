@@ -10,7 +10,7 @@ export class BasePage {
         this.page = page
     }
 
-    async navegar(url = xx){ //*XXXxXXXXXXXXXxxxxxxx
+    async navegar(url = Locators.url) {
         await this.page.goto(url)
     }
 

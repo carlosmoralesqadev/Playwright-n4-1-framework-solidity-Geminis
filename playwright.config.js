@@ -18,37 +18,40 @@ export default defineConfig({
 
     // Workers (en CI usa 1 solo, en local usa todos)
     workers: process.env.CI ? 1 : "50%",
+
     // Reporte HTML
     reporter: "html",
 
-    // ⏱️ Tiempo máximo por test (7.5 segundos TOTAL)
+    // ⏱️ Tiempo máximo por test (10.5 segundos TOTAL)
     timeout: 10500,
 
-    // ⏱️ Tiempo máximo para los expect (muy importante)
+    // ⏱️ Tiempo máximo para los expect
     expect: {
         timeout: 10500,
     },
 
     use: {
+        /* Atributo personalizado para locators */
         testIdAttribute: "data-test",
 
-        // ⏱️ Tiempo máximo para acciones (click, fill, etc)
+        /* ⏱️ Tiempos de espera */
         actionTimeout: 10500,
-
-        // ⏱️ Tiempo máximo para navegación (page.goto, etc)
         navigationTimeout: 10500,
 
-        // 📸 Screenshot automático SOLO si falla
+        /* 📸 Captura de pantalla SOLO si falla */
         screenshot: "only-on-failure",
-        // 📂 Se guarda en: test-results/
 
-        // 🐢 Hace todo más lento para ver qué pasa (solo si activas HEADED)
+        /* 🎥 Grabación de video SOLO si falla (Nuevo) */
+        video: "retain-on-failure",
+
+        /* 🧠 Rastro (Trace) para debug SOLO si falla (Corregido para 0 retries) */
+        trace: "retain-on-failure",
+
+        /* Configuración del navegador */
         launchOptions: {
+            // 🐢 Cámara lenta solo si activas modo con cabecera (Headed)
             slowMo: process.env.HEADED ? 1500 : 0,
         },
-
-        // 🧠 Guarda trace solo si falla (útil para debug)
-        trace: "on-first-retry",
     },
 
     projects: [

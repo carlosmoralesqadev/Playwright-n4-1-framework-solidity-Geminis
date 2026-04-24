@@ -9,7 +9,8 @@ export class LoginPage extends BasePage {
         super(page)
     }
     
-    async completarForm(user, pass){
+    async completarFormLogin(user, pass){
+        
 
     }
 
