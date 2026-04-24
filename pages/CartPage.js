@@ -1,19 +1,15 @@
-import { expect   } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { Locators } from "../data/data.js";
-import { BasePage } from "../pages/base/BasePage.js"
+import { BasePage } from "../pages/base/BasePage.js";
 
-export class CartPage extends Basepage{
+export class CartPage extends BasePage {
     /** @param {import('@playwright/test').Page} page */
 
-    constructor(page){
-        super(page)
+    constructor(page) {
+        super(page);
     }
 
-    async verifyProduct(incide){
+    async verifyProduct(incide) {}
 
-    }
-
-    async goToFormPersonal(){
-
-    }
+    async goToFormPersonal() {}
 }

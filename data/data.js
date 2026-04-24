@@ -6,11 +6,17 @@ export const Locators = {
     credenciales: {
         user: "standard_user",
         pass: "secret_sauce",
+        userWrong: "standard_userxxx",
+        passWrong: "secret_saucexxx",
     },
     login: {
         userInput: /Username/i,
         passInput: /Password/i,
         btnLogin: /Login/i,
+
+        msgErrorUno: /Epic sadface: Username and password do not match any user in this service/i,
+        msgErrorTwo: /Epic sadface: Username is required/i,
+        msgErrorThree: /Epic sadface: Password is required/i,
     },
     inventory: {
         iconCart: "shopping-cart-link", //data-test
@@ -54,6 +60,6 @@ export const Locators = {
         titleText: /Checkout: Overview/i,
         cartList: "cart-list", //data-test
         inventoryItem: "inventory-item", //data-test
-        btnFinish : /Finish/i
+        btnFinish: /Finish/i,
     },
 };
