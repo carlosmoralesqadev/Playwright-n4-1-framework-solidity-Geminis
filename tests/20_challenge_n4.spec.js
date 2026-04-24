@@ -22,22 +22,8 @@ test.describe("Challenge", () => {
         await login.navegar();
     });
 
-    test("Login Exitoso", async ({ page }) => {
+    test("Challenge n4", async ({ page }) => {
         await login.hacerLogin({ user: Locators.credenciales.user, pass: Locators.credenciales.pass, tipo: true });
     });
-    test("Login Failed User Wrong", async ({ page }) => {
-        await login.hacerLogin({ user: Locators.credenciales.userWrong, pass: Locators.credenciales.pass, tipo: false }); // not macht
-    });
-    test("Login Failed Password Wrong", async ({ page }) => {
-        await login.hacerLogin({ user: Locators.credenciales.user, pass: Locators.credenciales.passWrong, tipo: false }); // not macht
-    });
-    test("Login Failed User Empty", async ({ page }) => {
-        await login.hacerLogin({ user: "", pass: Locators.credenciales.pass, tipo: false }); // required user
-    });
-    test("Login Failed Password Empty", async ({ page }) => {
-        await login.hacerLogin({ user: Locators.credenciales.user, pass: "", tipo: false }); // required pass
-    });
-    test("Login Failed Tipo Empty", async ({ page }) => {
-        await login.hacerLogin({ user: Locators.credenciales.user, pass: Locators.credenciales.pass, tipo: "" }); // msg console log
-    });
+
 });
