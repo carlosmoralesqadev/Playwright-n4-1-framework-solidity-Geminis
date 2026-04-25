@@ -9,6 +9,10 @@ export class InventoryPage extends BasePage {
         super(page)
     }
 
+    async isList(){
+        
+    }
+
     async agregarprodcuto(indice){
 
     }
@@ -16,4 +20,17 @@ export class InventoryPage extends BasePage {
     async gotToCart(){
 
     }
-}
+
+    
+} 
+
+//  titulo 
+// lista
+// cantidad articulos
+// nombre de articulos
+// add to cart 
+// add y count in item
+// remove
+// remove and count
+// cart item 
+// count cart item 

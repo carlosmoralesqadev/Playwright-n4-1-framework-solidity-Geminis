@@ -1,26 +1,64 @@
-
 export const Locators = {
-    url: {
-        saucedemo: "https://www.saucedemo.com",
-    },
-    credenciales: {
-        user: "standard_user",
-        pass: "secret_sauce",
-        userWrong: "standard_userxxx",
-        passWrong: "secret_saucexxx",
-    },
-    login: {
-        userInput: /Username/i,
-        passInput: /Password/i,
-        btnLogin: /Login/i,
+    general: {
+        url: {
+            saucedemo: "https://www.saucedemo.com",
+        },
 
-        msgErrorUno: /Epic sadface: Username and password do not match any user in this service/i,
-        msgErrorTwo: /Epic sadface: Username is required/i,
-        msgErrorThree: /Epic sadface: Password is required/i,
+        header: {
+            menu: {
+                menu: /Open Menu/i, //button
+                iconCart: "shopping-cart-link", //data-test
+                linkAllItems: /All items/i, //a link
+                linkAbout: /About/i, // a link
+                linkLogout: /Logout/i, // a link
+                linkResetAppState: /Reset App State/i, // a link
+            },
+
+            logo: {
+                mainTitle: /Swag Labs/i,
+            },
+
+            cart: {
+                iconCart: "shopping-cart-link", //data-test
+                countIconCart: "shopping-cart-badge", //data-test
+            },
+        },
     },
-    inventory: {
-        iconCart: "shopping-cart-link", //data-test
-        countIconCart: "shopping-cart-badge", //data-test
+
+    pageLogin: {
+        credenciales: {
+            user: "standard_user",
+            pass: "secret_sauce",
+            userWrong: "standard_userxxx",
+            passWrong: "secret_saucexxx",
+        },
+
+        inputs: {
+            loginBox: "login-box", //class
+            userInput: /Username/i, //role
+            passInput: /Password/i, //role
+            btnLogin: /Login/i, //role
+        },
+
+        messages: {
+            msgErrorUno: /Epic sadface: Username and password do not match any user in this service/i,
+            msgErrorTwo: /Epic sadface: Username is required/i,
+            msgErrorThree: /Epic sadface: Password is required/i,
+        },
+
+        credentialsContainer: {
+            loginCredentialsContainer: "login-credentials-container", //Ddata-test
+            standarUserText: /standard_user/i,
+            pass: "secret_sauce",
+        },
+    },
+
+    pageInventory: {
+        inventoryContainer: "inventory_container", // locator id
+        intInventoryContainer: "inventory-container", // data-test
+        inventoryList: "inventory-list", //data-test
+        inventoryItem: "inventory-item", //data-test
+
         title: "title", //data-test
         titleText: /Products/i,
         productsList: "inventory-list", //data-test
@@ -29,6 +67,7 @@ export const Locators = {
         btnAddToCart: /Add To Cart/i,
         btnRemove: /Remove/i,
     },
+
     cart: {
         iconCart: "shopping-cart-link", //data-test
         countIconCart: "shopping-cart-badge", //data-test
@@ -39,7 +78,8 @@ export const Locators = {
         btnCheckout: /Checkout/i,
         btnReturnInventory: /Continue Shopping/i,
     },
-    payForm: {
+
+    pagePayForm: {
         iconCart: "shopping-cart-link", //data-test
         countIconCart: "shopping-cart-badge", //data-test
         title: "title", //data-test
@@ -53,7 +93,8 @@ export const Locators = {
         msgErrorEmptyLasttName: /Error: Last Name is required/i,
         msgErrorEmptyPostalCode: /Error: Postal Code is required/i,
     },
-    checkoutOverview: {
+
+    pageCheckoutOverview: {
         iconCart: "shopping-cart-link", //data-test
         countIconCart: "shopping-cart-badge", //data-test
         title: "title", //data-test
