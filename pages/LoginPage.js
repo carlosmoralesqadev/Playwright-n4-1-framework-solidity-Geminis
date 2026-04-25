@@ -6,15 +6,20 @@ export class LoginPage extends BasePage {
     /** @param {import ('@playwright/test').Page} page */
     constructor(page){
         super(page)
-        this.userInput = page.getByRole( "textbox", { name : Locators.login.userInput } );
-        this.passInput = page.getByRole( "textbox", { name : Locators.login.passInput } );
-        this.btnLogin  = page.getByRole( "button" , { name : Locators.login.btnLogin  } );
-        this.thisTitle = page.getByTestId(Locators.inventory.title)
+
+        this.userInput = page.getByRole( "textbox", { name : Locators.login.inputs.userInput } );
+        this.passInput = page.getByRole( "textbox", { name : Locators.login.inputs.passInput } );
+        this.btnLogin  = page.getByRole( "button" , { name : Locators.login.inputs.btnLogin  } );
+
         this.titleText = Locators.inventory.titleText
-        this.msgErrorOne   = page.getByRole( "heading" , { name : Locators.login.msgErrorUno   });
-        this.msgErrorTwo   = page.getByRole( "heading" , { name : Locators.login.msgErrorTwo   });
-        this.msgErrorThree = page.getByRole( "heading" , { name : Locators.login.msgErrorThree });
+
+
+        this.msgErrorOne   = page.getByRole( "heading" , { name : Locators.login.messages.msgErrorUno   });
+        this.msgErrorTwo   = page.getByRole( "heading" , { name : Locators.login.messages.msgErrorTwo   });
+        this.msgErrorThree = page.getByRole( "heading" , { name : Locators.login.messages.msgErrorThree });
     }
+
+
 
     async hacerLogin( {user = "" , pass = "" , tipo = ""} = {} ) {
         await this.completarFormLogin(user, pass);
@@ -26,6 +31,9 @@ export class LoginPage extends BasePage {
             console.log("------->>>--->>>>>>> Te falto pasar el tipo de login");
         }
     }
+
+
+
     
     async completarFormLogin(user ="", pass=""){
         await this.userInput.fill(user);
@@ -43,4 +51,10 @@ export class LoginPage extends BasePage {
         const anyError = this.msgErrorOne.or(this.msgErrorTwo).or(this.msgErrorThree);
         await expect(anyError).toBeVisible();
     };
+
+
+
+
+
+
 }
