@@ -19,12 +19,10 @@ export class BasePage {
         this.iconCart = page.getByTestId(Locators.header.cart.iconCart);
 
         //* Title   
-        this.thisTitleElement = page.getByTestId(Locators.header.title.titleElement)
-
-
+        this.titleElement = page.getByTestId(Locators.header.title.titleElement)
     }
 
-    async navegar(url = Locators.url.saucedemo) {
+    async navegar(url = Locators.general.url.saucedemo) {
         await this.page.goto(url);
     }
 

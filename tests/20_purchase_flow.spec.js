@@ -15,15 +15,15 @@ test.describe("Challenge", () => {
     let cart;
 
     test.beforeEach(async ({ page }) => {
-        login = new LoginPage(page);
+        login     = new LoginPage(page);
         inventory = new InventoryPage(page);
-        cart = new CartPage(page);
+        cart      = new CartPage(page);
 
         await login.navegar();
     });
 
     test("Challenge n4", async ({ page }) => {
-        await login.hacerLogin({ user: Locators.credenciales.user, pass: Locators.credenciales.pass, tipo: true });
+        await login.hacerLogin({ user: Locators.login.credenciales.user, pass: Locators.login.credenciales.pass, tipo: true });
     });
 
 });

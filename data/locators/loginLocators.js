@@ -4,6 +4,9 @@ export const loginLocators = {
         pass: "secret_sauce",
         userWrong: "standard_userxxx",
         passWrong: "secret_saucexxx",
+        looked_out_user: "locked_out_user",
+        performance_glitch_user: "performance_glitch_user",
+        error_user: "error_user",
     },
 
     inputs: {
