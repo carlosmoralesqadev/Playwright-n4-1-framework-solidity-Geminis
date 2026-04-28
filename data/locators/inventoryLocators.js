@@ -1,3 +1,4 @@
+
 export const inventoryLocators = {
     
     inventoryHeader : {

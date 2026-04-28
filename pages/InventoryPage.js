@@ -1,3 +1,4 @@
+
 import { expect   } from "@playwright/test";
 import { Locators } from "../data/data.js";
 import { BasePage } from "../pages/base/BasePage.js";
@@ -19,6 +20,12 @@ export class InventoryPage extends BasePage {
 
     async gotToCart(){
 
+    }
+
+
+    async isPageInventoryOk(){
+        await expect(this.titleElement).toBeVisible()
+        await expect(this.titleElement).toContainText(Locators.inventory.inventoryHeader.titleText)
     }
 
     

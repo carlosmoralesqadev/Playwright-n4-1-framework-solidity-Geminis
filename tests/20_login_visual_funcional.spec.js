@@ -22,52 +22,55 @@ test.describe("Page Login", () => {
         await login.navegar();
     });
 
-
-    test("Login Exitoso", async ({ page }) => {
+    test("Login Exitoso - standard_user", async ({ page }) => {
         await login.hacerLogin({ user: Locators.login.credenciales.user, pass: Locators.login.credenciales.pass, tipo: true });
     });
 
+
+    //* Test exitosos pero con inconvenientes en el performance o flujo
     test("Login performance_glitch_user", async ({ page }) => {
         await login.hacerLogin({ user: Locators.login.credenciales.performance_glitch_user, pass: Locators.login.credenciales.pass, tipo: "late" }); // performance_glitch_user
     });
-
     test("Login error_user", async ({ page }) => {
         await login.hacerLogin({ user: Locators.login.credenciales.performance_glitch_user, pass: Locators.login.credenciales.pass, tipo: "error_user" });
 
         //*Validar con las funciones de InventoryPage que el botonAdd deje de funcionar
         //*Validar con las funciones de InventoryPage que el botonAdd deje de funcionar
         //*Validar con las funciones de InventoryPage que el botonAdd deje de funcionar
-        //*Validar con las funciones de InventoryPage que el botonAdd deje de funcionar
-        //*Validar con las funciones de InventoryPage que el botonAdd deje de funcionar
-        //*Validar con las funciones de InventoryPage que el botonAdd deje de funcionar
+        //*Validar con las funciones de Otras pages, no cambia bien sus estados
+        //*Validar con las funciones de Otras pages, no cambia bien sus estados
+        //*Validar con las funciones de Otras pages, no cambia bien sus estados
+    });
+    test("Login problem_user", async ({ page }) => {
+        await login.hacerLogin({ user: Locators.login.credenciales.performance_glitch_user, pass: Locators.login.credenciales.pass, tipo: "error_user" });
+
+        //*Validar con las funciones de InventoryPage - imagenes guales - ver src
+        //*Validar con las funciones de InventoryPage - imagenes guales - ver src
+        //*Validar con las funciones de InventoryPage - imagenes guales - ver src
+        //*Validar con las funciones de InventoryPage - imagenes guales - ver src
+        //*Validar con las funciones de InventoryPage - imagenes guales - ver src
     });
 
-    test("Login Failed User Wrong", async ({ page }) => {
-         await login.hacerLogin({ user: Locators.login.credenciales.userWrong, pass: Locators.login.credenciales.pass, tipo: false }); // not macht
-    });
 
-    test("Login Failed Password Wrong", async ({ page }) => {
-        await login.hacerLogin({ user: Locators.login.credenciales.user, pass: Locators.login.credenciales.passWrong, tipo: false }); // not macht
-    });
 
+    //* Test fallidos por credenciales
     test("Login Failed User Looked", async ({ page }) => {
         await login.hacerLogin({ user: Locators.login.credenciales.looked_out_user, pass: Locators.login.credenciales.pass, tipo: false }); // not macht
     });
-
-
+    test("Login Failed User Wrong", async ({ page }) => {
+        await login.hacerLogin({ user: Locators.login.credenciales.userWrong, pass: Locators.login.credenciales.pass, tipo: false }); // not macht
+    });
+    test("Login Failed Password Wrong", async ({ page }) => {
+        await login.hacerLogin({ user: Locators.login.credenciales.user, pass: Locators.login.credenciales.passWrong, tipo: false }); // not macht
+    });
     test("Login Failed User Empty", async ({ page }) => {
         await login.hacerLogin({ user: "", pass: Locators.login.credenciales.pass, tipo: false }); // required user
     });
-
     test("Login Failed Password Empty", async ({ page }) => {
         await login.hacerLogin({ user: Locators.login.credenciales.user, pass: "", tipo: false }); // required pass
     });
-
     test("Login Failed Tipo Empty", async ({ page }) => {
         await login.hacerLogin({ user: Locators.login.credenciales.user, pass: Locators.login.credenciales.pass, tipo: "" }); // msg console log
     });
-
-
-
 });
 

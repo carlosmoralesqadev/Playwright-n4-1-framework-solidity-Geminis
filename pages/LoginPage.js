@@ -65,11 +65,4 @@ export class LoginPage extends BasePage {
         }
         await this.resultLoginExitoso();
     }
-    async error_user_part_one(){
-
-
-
-
-        await this.resultLoginExitoso();
-    }
 }
