@@ -1,13 +1,16 @@
 
 import { headerLocators           } from "./locators/headerLocators.js";
+import { footerLocators           } from "./locators/footerLocators.js";
 import { loginLocators            } from "./locators/loginLocators.js";
 import { inventoryLocators        } from "./locators/inventoryLocators.js";
 import { checkCartLocators        } from "./locators/checkCartLocators.js";
 import { payFormLocators          } from "./locators/payFormLocators.js";
 import { checkoutOverviewLocators } from "./locators/checkoutOverviewLocators.js";
 
+
 export const Locators = {
     header    : headerLocators,
+    footer    : footerLocators,
     login     : loginLocators,
     inventory : inventoryLocators,
     checkCart : checkCartLocators,

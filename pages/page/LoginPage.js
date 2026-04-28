@@ -1,6 +1,6 @@
 import { expect   } from "@playwright/test";
-import { Locators } from "../data/data.js";
-import { BasePage } from "../pages/base/BasePage.js"
+import { Locators } from "../../data/data.js";
+import { BasePage } from "../base/BasePage.js";
 
 export class LoginPage extends BasePage {
     /** @param {import ('@playwright/test').Page} page */
@@ -42,8 +42,8 @@ export class LoginPage extends BasePage {
     }
 
     async resultLoginExitoso() {
-        await expect(this.titleElement).toBeVisible();
-        await expect(this.titleElement).toContainText(this.titleText);
+        await expect(this.header.titleElement).toBeVisible();
+        await expect(this.header.titleElement).toContainText(this.titleText);
         await expect(this.btnLogin).not.toBeVisible();
     }
 

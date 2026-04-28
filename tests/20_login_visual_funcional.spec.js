@@ -1,8 +1,8 @@
 import { test, expect  } from "@playwright/test";
 import { BasePage      } from "../pages/base/BasePage.js"
-import { LoginPage     } from "../pages/LoginPage.js";
-import { InventoryPage } from "../pages/InventoryPage.js"
-import { CartPage      } from "../pages/CartPage.js";
+import { LoginPage     } from "../pages/page/LoginPage.js";
+import { InventoryPage } from "../pages/page/InventoryPage.js"
+import { CartPage      } from "../pages/page/CartPage.js";
 import { Locators      } from "../data/data.js";
 
 test.describe("Page Login", () => {
