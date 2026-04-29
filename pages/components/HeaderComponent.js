@@ -21,11 +21,12 @@ export class HeaderComponent {
         this.titleElement = page.getByTestId(Locators.header.title.titleElement);
     }
 
-    async verifyUIHeader() {
+    async verifyUIHeader(titleText) {
         await expect(this.btnMenu).toBeVisible();
         await expect(this.logo).toBeVisible();
         await expect(this.logo).toContainText(this.logoText);
         await expect(this.iconCart).toBeVisible();
         await expect(this.titleElement).toBeVisible();
+        await expect(this.titleElement).toContainText(titleText);
     }
 }

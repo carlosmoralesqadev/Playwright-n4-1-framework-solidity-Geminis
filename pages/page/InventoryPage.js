@@ -7,26 +7,51 @@ export class InventoryPage extends BasePage {
 
     constructor(page) {
         super(page);
-    }
 
-    async isList() {}
+        this.inventoryContainer = page.locator(Locators.inventory.productsContainers.inventoryContainer)
+        this.internoInventoryContainer = page.getByTestId(Locators.inventory.productsContainers.internoInventoryContainer);
+        this.inventoryList = page.getByTestId(Locators.inventory.productsContainers.inventoryList);
+        this.inventoryItem = page.getByTestId(Locators.inventory.productsContainers.inventoryItem);
+
+
+        this.productName = page.getByTestId(Locators.inventory.productsContainers.products.productName);
+        this.btnAddToCart = page.getByTestId(Locators.inventory.productsContainers.products.productName);
+        this.btnRemove = page.getByTestId(Locators.inventory.productsContainers.products.productName);
+        this.productName = page.getByTestId(Locators.inventory.productsContainers.products.productName);
+
+
+
+    }
 
     async agregarprodcuto(indice) {}
 
     async gotToCart() {}
 
-    async isPageInventoryOk() {
-        await this.header.verifyUIHeader();
-
-        await expect(this.header.titleElement).toContainText(Locators.inventory.inventoryHeader.titleText);
-
+    async isPageInventoryOk(titleText) {
+        await this.header.verifyUIHeader(titleText);
         await this.footer.isFooterOk()
+        await this.isInventoryOk()
     }
+
+    async isInventoryOk(){
+        await expect((this.inventoryContainer).first()).toBeVisible()
+        await expect(this.internoInventoryContainer).toBeVisible();
+        await expect(this.inventoryList).toBeVisible();
+        await expect(this.inventoryItem).toHaveCount(6)
+    }
+
+    async isProductOk(){
+        const product = this.inventoryItem
+
+        await product
+    }
+
+
+
+
 }
 
-//  titulo
-// lista
-// cantidad articulos
+
 // nombre de articulos
 // add to cart
 // add y count in item
