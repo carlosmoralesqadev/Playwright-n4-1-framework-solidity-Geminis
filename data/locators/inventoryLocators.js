@@ -12,17 +12,29 @@ export const inventoryLocators = {
         inventoryItem: "inventory-item", //data-test
 
         products: {
-            productName: "inventory-item-name", //data-test
-            btnAddToCart: /Add To Cart/i,
-            btnRemove: /Remove/i,
 
-            inventoryItemImgContainer: ".inventory_item_img",
-            inventoryItemImg: ".inventory_item_img",
+            //*Contenido de cada producto
 
-            inventoryitemdescriptionContainer: "inventory-item-description",
-            inventoryItemLabel: ".inventory_item_label",
-            inventoryItemName : "inventory-item-name", //data-test
-            inventoryItemDesc : "inventory-item-desc", //datatest
+            img : {
+                inventoryItemImgContainer: ".inventory_item_img",
+            },
+
+            description : {
+                inventoryItemDescriptionContainer : "inventory-item-description",
+                inventoryItemLabelContainer: ".inventory_item_label",
+                inventoryItemName : "inventory-item-name", //data-test
+                inventoryItemDesc : "inventory-item-desc", //datatest
+
+
+            },
+
+            price : {
+                pricebarContainer : ".pricebar",
+                inventoryItemPrice : "inventory-item-price",
+                btnAddToCart: /Add To Cart/i,
+                btnRemove: /Remove/i,
+
+            }
         },
     },
 };

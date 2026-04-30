@@ -8,19 +8,17 @@ export class InventoryPage extends BasePage {
     constructor(page) {
         super(page);
 
+        //*Products Containers
         this.inventoryContainer = page.locator(Locators.inventory.productsContainers.inventoryContainer)
         this.internoInventoryContainer = page.getByTestId(Locators.inventory.productsContainers.internoInventoryContainer);
         this.inventoryList = page.getByTestId(Locators.inventory.productsContainers.inventoryList);
         this.inventoryItem = page.getByTestId(Locators.inventory.productsContainers.inventoryItem);
 
-
+        //*Product
         this.productName = page.getByTestId(Locators.inventory.productsContainers.products.productName);
         this.btnAddToCart = page.getByTestId(Locators.inventory.productsContainers.products.productName);
         this.btnRemove = page.getByTestId(Locators.inventory.productsContainers.products.productName);
         this.productName = page.getByTestId(Locators.inventory.productsContainers.products.productName);
-
-
-
     }
 
     async agregarprodcuto(indice) {}
@@ -41,9 +39,9 @@ export class InventoryPage extends BasePage {
     }
 
     async isProductOk(){
+
         const product = this.inventoryItem
 
-        await product
     }
 
 
