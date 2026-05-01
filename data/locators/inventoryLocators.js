@@ -1,40 +1,40 @@
-
 export const inventoryLocators = {
     inventoryHeader: {
         titleText: /Products/i,
-        filter: "product-sort-container", //data-test
+    },
+    
+    filter:{
+        productsFilter: "product-sort-container", //data-test
+        optionNameAToZ: /Name (A to Z)/i,
+        optionNameZToA: /Name (Z to A)/i,
+        optionPriceLowToHigh: /Price (low to high)/i,
+        optionPriceHighToLow: /Price (high to low)/i,
     },
 
     productsContainers: {
         inventoryContainer: "#inventory_container",
         internoInventoryContainer: "inventory-container", // data-test
-        inventoryList: "inventory-list", //data-test
-        inventoryItem: "inventory-item", //data-test
+        productsList: "inventory-list", //data-test
+        product: "inventory-item", //data-test
+    },
 
-        products: {
+    //*Contenido de cada producto
+    img: {
+        inventoryItemImgContainer: ".inventory_item_img",
+        inventoryitemImg: ".inventory_item_img",
+    },
 
-            //*Contenido de cada producto
+    description: {
+        descriptionContainer: "inventory-item-description",
+        LabelContainer: ".inventory_item_label",
+        productName: "inventory-item-name", //data-test
+        productDescription: "inventory-item-desc", //datatest
+    },
 
-            img : {
-                inventoryItemImgContainer: ".inventory_item_img",
-            },
-
-            description : {
-                inventoryItemDescriptionContainer : "inventory-item-description",
-                inventoryItemLabelContainer: ".inventory_item_label",
-                inventoryItemName : "inventory-item-name", //data-test
-                inventoryItemDesc : "inventory-item-desc", //datatest
-
-
-            },
-
-            price : {
-                pricebarContainer : ".pricebar",
-                inventoryItemPrice : "inventory-item-price",
-                btnAddToCart: /Add To Cart/i,
-                btnRemove: /Remove/i,
-
-            }
-        },
+    price: {
+        priceAndBtnContainer: ".pricebar",
+        productPrice: "inventory-item-price",
+        btnAddToCart: /Add To Cart/i,
+        btnRemove: /Remove/i,
     },
 };
