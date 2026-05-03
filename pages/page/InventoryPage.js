@@ -12,82 +12,112 @@ export class InventoryPage extends BasePage {
         this.titleProductsText = Locators.inventory.inventoryHeader.titleText;
 
         //*Filter
-        this.productsFilter = page.getByTestId(Locators.inventory.inventoryHeader.productsFilter);
-        this.optionNameAToZ = page.getByRole("option", { name: Locators.inventory.filter.optionNameAToZ });
-        this.optionNameZToA = page.getByRole("option", { name: Locators.inventory.filter.optionNameZToA });
-        this.optionPriceLowToHigh = page.getByRole("option", { name: Locators.inventory.filter.optionPriceLowToHigh });
-        this.optionPriceHighToLow = page.getByRole("option", { name: Locators.inventory.filter.optionPriceHighToLow });
+        this.productsFilter       = page.getByTestId(Locators.inventory.filter.productsFilter);
 
         //*Products Containers
-        this.inventoryContainer = page.locator(Locators.inventory.productsContainers.inventoryContainer);
+        this.inventoryContainer        = page.locator(Locators.inventory.productsContainers.inventoryContainer);
         this.internoInventoryContainer = page.getByTestId(Locators.inventory.productsContainers.internoInventoryContainer);
-        this.productsList = page.getByTestId(Locators.inventory.productsContainers.productsList);
-        this.product = page.getByTestId(Locators.inventory.productsContainers.product);
+        this.productsList              = page.getByTestId(Locators.inventory.productsContainers.productsList);
+        this.product                   = page.getByTestId(Locators.inventory.productsContainers.product);
 
         //*Img
-        this.imgContainer = page.locator(Locators.inventory.img.inventoryItemImgContainer);
-        this.img = page.locator(Locators.inventory.img.inventoryitemImg);
+        this.imgContainer = Locators.inventory.img.inventoryItemImgContainer;
+        this.img          = Locators.inventory.img.inventoryitemImg;
 
         //*Description
-        this.descriptionContainer = page.getByTestId(Locators.inventory.description.descriptionContainer);
-        this.LabelContainer = page.locator(Locators.inventory.description.LabelContainer);
-        this.productName = page.getByTestId(Locators.inventory.description.productName);
-        this.productDescription = page.getByTestId(Locators.inventory.description.productDescription);
+        this.descriptionContainer = Locators.inventory.description.descriptionContainer;
+        this.LabelContainer       = Locators.inventory.description.LabelContainer;
+        this.productName          = Locators.inventory.description.productName;
+        this.productDescription   = Locators.inventory.description.productDescription;
 
         //*Price
-        this.priceAndBtnContainer = page.locator(Locators.inventory.price.priceAndBtnContainer);
-        this.productPrice = page.getByTestId(Locators.inventory.price.productPrice);
-        this.btnAddToCart = page.getByRole("button", { name: Locators.inventory.price.btnAddToCart });
-        this.btnRemove = page.getByRole("button", { name: Locators.inventory.price.btnRemove });
+        this.priceAndBtnContainer = Locators.inventory.price.priceAndBtnContainer;
+        this.productPrice         = Locators.inventory.price.productPrice;
+        this.btnAddToCart         = page.getByRole("button", { name: Locators.inventory.price.btnAddToCart });
+        this.btnRemove            = page.getByRole("button", { name: Locators.inventory.price.btnRemove });
     }
 
     async addProduct(indice) {
-        await this.btnAddToCart.click();
+        await this.btnAddToCart.nth().click();
     }
     async removeProduct(indice) {
-        await this.btnRemove.click();
+        await this.btnRemove.nth().click();
     }
     async gotToCart() {}
 
-    async isPageInventoryOk(titleText) {
+    async isInventoryPageOk(titleText) {
         await this.header.verifyUIHeader(titleText);
         const isFilterOk = async () => {
             await expect(this.productsFilter).toBeVisible();
-            await expect(this.optionNameAToZ).toBeVisible();
-            await expect(this.optionNameZToA).toBeVisible();
-            await expect(this.optionPriceLowToHigh).toBeVisible();
-            await expect(this.optionPriceHighToLow).toBeVisible();
+            await this.productsFilter.click();
+
+            await this.productsFilter.selectOption("az");
+            await expect(this.productsFilter).toHaveValue("az");
+
+            await this.productsFilter.selectOption("za");
+            await expect(this.productsFilter).toHaveValue("za");
+
+            await this.productsFilter.selectOption("lohi");
+            await expect(this.productsFilter).toHaveValue("lohi");
+            
+            await this.productsFilter.selectOption("hilo");
+            await expect(this.productsFilter).toHaveValue("hilo");
+
         };
         const isProductsContainersOk = async () => {
-            await expect(this.inventoryContainer).toBeVisible();
+            await expect((this.inventoryContainer).first()).toBeVisible();
             await expect(this.internoInventoryContainer).toBeVisible();
             await expect(this.productsList).toBeVisible();
-            await expect(this.product).toHaveCount(6);
+
+
+            const totalProducts = await this.product.count();
+
+            for(let i = 0; i < totalProducts ; i++){
+                await this.isProductOk(i)
+            }
         };
         await isFilterOk();
         await isProductsContainersOk();
         await this.footer.isFooterOk();
     }
 
-    async isProductOk() {
+    async isProductOk(indice) {
+
+        const product = this.product.nth(indice);
+
         const isImgOk = async () => {
-            await expect(this.imgContainer).toBeVisible();
-            await expect(this.img).toBeVisible();
+            await expect(product.locator(this.imgContainer)).toBeVisible();
+            await expect(product.locator(this.img)).toBeVisible();
         };
+
         const isDescriptionOk = async () => {
-            await expect(this.descriptionContainer).toBeVisible();
-            await expect(this.LabelContainer).toBeVisible();
-            await expect(this.productName).toBeVisible();
-            await expect(this.productDescription).toBeVisible();
+            await expect(product.locator(this.descriptionContainer)).toBeVisible();
+            await expect(product.locator(this.LabelContainer)).toBeVisible();
+            await expect(product.locator(this.productName)).toBeVisible();
+            await expect(product.locator(this.productDescription)).toBeVisible();
         };
+
         const isPriceOk = async () => {
-            await expect(this.priceAndBtnContainer).toBeVisible();
-            await expect(this.productPrice).toBeVisible();
-            await expect(this.btnAddToCart).toBeVisible();
-            await expect(this.btnRemove).not.toBeVisible();
-            await this.addProduct();
-            await expect(this.btnRemove).toBeVisible();
+            await expect(product.locator(this.priceAndBtnContainer)).toBeVisible();
+            await expect(product.locator(this.productPrice)).toBeVisible();
+
+            const btnAdd = product.getByRole("button", {
+                name: Locators.inventory.price.btnAddToCart,
+            });
+
+            const btnRemove = product.getByRole("button", {
+                name: Locators.inventory.price.btnRemove,
+            });
+
+            await expect(btnAdd).toBeVisible();
+            await expect(btnRemove).not.toBeVisible();
+
+            await btnAdd.click();
+
+            await expect(btnRemove).toBeVisible();
         };
+
+
         await isImgOk();
         await isDescriptionOk();
         await isPriceOk();

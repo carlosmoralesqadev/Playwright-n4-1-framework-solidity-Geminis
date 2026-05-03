@@ -25,8 +25,6 @@ test.describe("Page Login", () => {
     test("Login Exitoso - standard_user", async ({ page }) => {
         await login.hacerLogin({ user: Locators.login.credenciales.user, pass: Locators.login.credenciales.pass, tipo: true });
     });
-
-
     //* Test exitosos pero con inconvenientes en el performance o flujo
     test("Login performance_glitch_user", async ({ page }) => {
         await login.hacerLogin({ user: Locators.login.credenciales.performance_glitch_user, pass: Locators.login.credenciales.pass, tipo: "late" }); // performance_glitch_user
@@ -50,9 +48,6 @@ test.describe("Page Login", () => {
         //*Validar con las funciones de InventoryPage - imagenes guales - ver src
         //*Validar con las funciones de InventoryPage - imagenes guales - ver src
     });
-
-
-
     //* Test fallidos por credenciales
     test("Login Failed User Looked", async ({ page }) => {
         await login.hacerLogin({ user: Locators.login.credenciales.looked_out_user, pass: Locators.login.credenciales.pass, tipo: false }); // not macht

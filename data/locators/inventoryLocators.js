@@ -2,8 +2,8 @@ export const inventoryLocators = {
     inventoryHeader: {
         titleText: /Products/i,
     },
-    
-    filter:{
+
+    filter: {
         productsFilter: "product-sort-container", //data-test
         optionNameAToZ: /Name (A to Z)/i,
         optionNameZToA: /Name (Z to A)/i,
@@ -21,7 +21,7 @@ export const inventoryLocators = {
     //*Contenido de cada producto
     img: {
         inventoryItemImgContainer: ".inventory_item_img",
-        inventoryitemImg: ".inventory_item_img",
+        inventoryitemImg: ".inventory_item_img img",
     },
 
     description: {
