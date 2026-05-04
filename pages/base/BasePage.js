@@ -12,9 +12,6 @@ export class BasePage {
 
         this.header = new HeaderComponent(page)
         this.footer = new FooterComponent(page);
-
-        //* Footer
-        
     }
 
     async navegar(url = Locators.general.url.saucedemo) {

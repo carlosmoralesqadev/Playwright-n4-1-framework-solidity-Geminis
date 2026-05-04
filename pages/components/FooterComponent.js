@@ -13,9 +13,9 @@ export class FooterComponent {
         this.socialMediaContainer = page.locator(Locators.footer.socialMediaContainer);
 
         //*Footer SocialsMedia
-        this.socialMediaTwitter = page.getByRole("link", { name: Locators.footer.socialMediaTwitter });
-        this.socialMediaFacebook = page.getByRole("link", { name: Locators.footer.socialMediaFacebook });
-        this.socialMediaLinkedIn = page.getByRole("link", { name: Locators.footer.socialMediaLinkedIn });
+        this.socialMediaTwitter   = page.getByRole("link", { name: Locators.footer.socialMediaTwitter });
+        this.socialMediaFacebook  = page.getByRole("link", { name: Locators.footer.socialMediaFacebook });
+        this.socialMediaLinkedIn  = page.getByRole("link", { name: Locators.footer.socialMediaLinkedIn });
 
         //*Footer Legal
         this.footerLegals = page.getByTestId(Locators.footer.footerLegals);

@@ -23,7 +23,7 @@ test.describe("Page Inventory", () => {
     })
 
     test.only("Inventory Page", async ({page}) => {
-        await inventory.isInventoryPageOk(Locators.inventory.inventoryHeader.titleText);
+        await inventory.isInventoryPageOk();
     })
 })
 

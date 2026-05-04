@@ -11,7 +11,7 @@ export class LoginPage extends BasePage {
         this.passInput = page.getByRole("textbox", { name: Locators.login.inputs.passInput });
         this.btnLogin = page.getByRole("button", { name: Locators.login.inputs.btnLogin });
 
-        this.titleText = Locators.inventory.inventoryHeader.titleText;
+        this.titleText = Locators.inventory.inventoryHeader.inventoryTitleText;
 
         this.msgErrorOne = page.getByRole("heading", { name: Locators.login.messages.msgErrorUno });
         this.msgErrorTwo = page.getByRole("heading", { name: Locators.login.messages.msgErrorTwo });

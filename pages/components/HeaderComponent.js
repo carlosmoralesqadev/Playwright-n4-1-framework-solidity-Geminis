@@ -8,10 +8,10 @@ export class HeaderComponent {
         this.page = page;
 
         //* Menu
-        this.btnMenu = page.getByRole("button", { name: Locators.header.menu.btnMenu });
+        this.btnMenu  = page.getByRole("button", { name: Locators.header.menu.btnMenu });
 
         //* Logo
-        this.logo = page.locator(Locators.header.logo.mainTitleElement);
+        this.logo     = page.locator(Locators.header.logo.mainTitleElement);
         this.logoText = Locators.header.logo.mainTitleText;
 
         //* IconCart
@@ -22,11 +22,11 @@ export class HeaderComponent {
     }
 
     async verifyUIHeader(titleText) {
-        await expect(this.btnMenu).toBeVisible();
-        await expect(this.logo).toBeVisible();
-        await expect(this.logo).toContainText(this.logoText);
-        await expect(this.iconCart).toBeVisible();
-        await expect(this.titleElement).toBeVisible();
-        await expect(this.titleElement).toContainText(titleText);
+        await expect( this.btnMenu      ).toBeVisible();
+        await expect( this.logo         ).toBeVisible();
+        await expect( this.logo         ).toContainText(this.logoText);
+        await expect( this.iconCart     ).toBeVisible();
+        await expect( this.titleElement ).toBeVisible();
+        await expect( this.titleElement ).toContainText(titleText);
     }
 }

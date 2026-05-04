@@ -9,32 +9,32 @@ export class InventoryPage extends BasePage {
         super(page);
 
         //*Header
-        this.titleProductsText = Locators.inventory.inventoryHeader.titleText;
+        this.inventoryTitleText = Locators.inventory.inventoryHeader.inventoryTitleText;
 
         //*Filter
-        this.productsFilter       = page.getByTestId(Locators.inventory.filter.productsFilter);
+        this.productsFilter = page.getByTestId(Locators.inventory.filter.productsFilter);
 
         //*Products Containers
-        this.inventoryContainer        = page.locator(Locators.inventory.productsContainers.inventoryContainer);
+        this.inventoryContainer = page.locator(Locators.inventory.productsContainers.inventoryContainer);
         this.internoInventoryContainer = page.getByTestId(Locators.inventory.productsContainers.internoInventoryContainer);
-        this.productsList              = page.getByTestId(Locators.inventory.productsContainers.productsList);
-        this.product                   = page.getByTestId(Locators.inventory.productsContainers.product);
+        this.productsList = page.getByTestId(Locators.inventory.productsContainers.productsList);
+        this.product = page.getByTestId(Locators.inventory.productsContainers.product);
 
         //*Img
-        this.imgContainer = Locators.inventory.img.inventoryItemImgContainer;
-        this.img          = Locators.inventory.img.inventoryitemImg;
+        this.imgContainer = Locators.inventory.img.imgContainer;
+        this.img = Locators.inventory.img.itemImg;
 
         //*Description
         this.descriptionContainer = Locators.inventory.description.descriptionContainer;
-        this.LabelContainer       = Locators.inventory.description.LabelContainer;
-        this.productName          = Locators.inventory.description.productName;
-        this.productDescription   = Locators.inventory.description.productDescription;
+        this.LabelContainer = Locators.inventory.description.LabelContainer;
+        this.productName = Locators.inventory.description.productName;
+        this.productDescription = Locators.inventory.description.productDescription;
 
         //*Price
         this.priceAndBtnContainer = Locators.inventory.price.priceAndBtnContainer;
-        this.productPrice         = Locators.inventory.price.productPrice;
-        this.btnAddToCart         = page.getByRole("button", { name: Locators.inventory.price.btnAddToCart });
-        this.btnRemove            = page.getByRole("button", { name: Locators.inventory.price.btnRemove });
+        this.productPrice = Locators.inventory.price.productPrice;
+        this.btnAddToCart = page.getByRole("button", { name:Locators.inventory.price.btnAddToCart });
+        this.btnRemove = page.getByRole("button", { name: Locators.inventory.price.btnRemove });
     }
 
     async addProduct(indice) {
@@ -45,84 +45,101 @@ export class InventoryPage extends BasePage {
     }
     async gotToCart() {}
 
-    async isInventoryPageOk(titleText) {
-        await this.header.verifyUIHeader(titleText);
-        const isFilterOk = async () => {
-            await expect(this.productsFilter).toBeVisible();
-            await this.productsFilter.click();
-
-            await this.productsFilter.selectOption("az");
-            await expect(this.productsFilter).toHaveValue("az");
-
-            await this.productsFilter.selectOption("za");
-            await expect(this.productsFilter).toHaveValue("za");
-
-            await this.productsFilter.selectOption("lohi");
-            await expect(this.productsFilter).toHaveValue("lohi");
-            
-            await this.productsFilter.selectOption("hilo");
-            await expect(this.productsFilter).toHaveValue("hilo");
-
-        };
-        const isProductsContainersOk = async () => {
-            await expect((this.inventoryContainer).first()).toBeVisible();
-            await expect(this.internoInventoryContainer).toBeVisible();
-            await expect(this.productsList).toBeVisible();
-
-
-            const totalProducts = await this.product.count();
-
-            for(let i = 0; i < totalProducts ; i++){
-                await this.isProductOk(i)
-            }
-        };
-        await isFilterOk();
-        await isProductsContainersOk();
+    //* isInventoryPageOk contiene a cada sección de la pagina 
+    async isInventoryPageOk() {
+        await this.header.verifyUIHeader(this.inventoryTitleText);
+        await this.isFilterOk();
+        await this.isProductsContainersOk();
+        await this.iterarProducts();
         await this.footer.isFooterOk();
     }
 
-    async isProductOk(indice) {
+    async isFilterOk() {
+        await expect(this.productsFilter).toBeVisible();
+        await this.productsFilter.click();
 
+        await this.productsFilter.selectOption("az");
+        await expect(this.productsFilter).toHaveValue("az");
+
+        await this.productsFilter.selectOption("za");
+        await expect(this.productsFilter).toHaveValue("za");
+
+        await this.productsFilter.selectOption("lohi");
+        await expect(this.productsFilter).toHaveValue("lohi");
+
+        await this.productsFilter.selectOption("hilo");
+        await expect(this.productsFilter).toHaveValue("hilo");
+    }
+
+    async isProductsContainersOk() {
+        //*Evalua que esten correctamente los contenedores de la sección de productos
+        await expect(this.inventoryContainer.first()).toBeVisible();
+        await expect(this.internoInventoryContainer).toBeVisible();
+        await expect(this.productsList).toBeVisible();
+    }
+
+    async iterarProducts() {
+        //*Toma a product y cuenta cuantos hay.
+        const totalProducts = await this.product.count();
+
+        //*Sabiendo cuantos productos iguales hay, itera sobre cada uno de ellos y usa el metodo isProductOk
+        for (let i = 0; i < totalProducts; i++) {
+            await this.isProductOk(i);
+        }
+    }
+
+    /**------------------------------------------------------*/
+    /**------------------------------------------------------*/
+    /**------------------------------------------------------*/
+    //* isProductOk Tiene : Img, Description, Price, Btns
+    //* isProduct pasa a isInventoryPageOk que evalua toda la pagina, donde iterando los productos.
+    async isProductOk(indice) {
         const product = this.product.nth(indice);
 
-        const isImgOk = async () => {
-            await expect(product.locator(this.imgContainer)).toBeVisible();
-            await expect(product.locator(this.img)).toBeVisible();
-        };
+        await this.isImgOk(product);
+        await this.isDescriptionOk(product);
+        await this.isPriceOk(product);
+        await this.isBtnsOk(product);
+    }
 
-        const isDescriptionOk = async () => {
-            await expect(product.locator(this.descriptionContainer)).toBeVisible();
-            await expect(product.locator(this.LabelContainer)).toBeVisible();
-            await expect(product.locator(this.productName)).toBeVisible();
-            await expect(product.locator(this.productDescription)).toBeVisible();
-        };
+    async isImgOk(product) {
+        await expect(product.locator(this.imgContainer)).toBeVisible();
+        await expect(product.locator(this.img)).toBeVisible();
+    }
 
-        const isPriceOk = async () => {
-            await expect(product.locator(this.priceAndBtnContainer)).toBeVisible();
-            await expect(product.locator(this.productPrice)).toBeVisible();
+    async isDescriptionOk(product) {
+        await expect(product.getByTestId(this.descriptionContainer)).toBeVisible();
+        await expect(product.locator(this.LabelContainer)).toBeVisible();
+        await expect(product.getByTestId(this.productName)).toBeVisible();
+        await expect(product.getByTestId(this.productDescription)).toBeVisible();
+    }
 
-            const btnAdd = product.getByRole("button", {
-                name: Locators.inventory.price.btnAddToCart,
-            });
+    async isPriceOk(product) {
+        await expect(product.locator(this.priceAndBtnContainer)).toBeVisible();
+        await expect(product.getByTestId(this.productPrice)).toBeVisible();
+    }
 
-            const btnRemove = product.getByRole("button", {
-                name: Locators.inventory.price.btnRemove,
-            });
+    async isBtnsOk(product) {
+        const btnAdd = product.getByRole("button", {
+            name: Locators.inventory.price.btnAddToCart,
+        });
 
-            await expect(btnAdd).toBeVisible();
-            await expect(btnRemove).not.toBeVisible();
+        const btnRemove = product.getByRole("button", {
+            name: Locators.inventory.price.btnRemove,
+        });
 
-            await btnAdd.click();
+        await expect(btnAdd).toBeVisible();
+        await expect(btnRemove).not.toBeVisible();
 
-            await expect(btnRemove).toBeVisible();
-        };
-
-
-        await isImgOk();
-        await isDescriptionOk();
-        await isPriceOk();
+        await btnAdd.click();
+        await expect(btnAdd).not.toBeVisible();
+        await expect(btnRemove).toBeVisible();
     }
 }
+
+
+
+
 
 // add y count in item
 // remove
