@@ -25,5 +25,7 @@ test.describe("Challenge", () => {
         await login.hacerLogin({ user: Locators.login.credenciales.user, pass: Locators.login.credenciales.pass, tipo: true });
 
         await inventory.isPageInventoryOk(Locators.inventory.inventoryHeader.titleText);
+
+        
     });
 });

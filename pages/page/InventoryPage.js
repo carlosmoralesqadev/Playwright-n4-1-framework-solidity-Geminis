@@ -37,12 +37,19 @@ export class InventoryPage extends BasePage {
         this.btnRemove = page.getByRole("button", { name: Locators.inventory.price.btnRemove });
     }
 
+    async selectProduct(){
+
+    }
+
     async addProduct(indice) {
+        
         await this.btnAddToCart.nth().click();
     }
     async removeProduct(indice) {
         await this.btnRemove.nth().click();
     }
+
+
     async gotToCart() {}
 
     //* isInventoryPageOk contiene a cada sección de la pagina 
