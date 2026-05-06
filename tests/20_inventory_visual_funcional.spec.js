@@ -22,7 +22,7 @@ test.describe("Page Inventory", () => {
         await login.hacerLogin({ user : Locators.login.credenciales.user, pass : Locators.login.credenciales.pass, tipo: true})
     })
 
-    test.only("Inventory Page", async ({page}) => {
+    test("Inventory Page", async ({page}) => {
         await inventory.isInventoryPageOk();
     })
 })

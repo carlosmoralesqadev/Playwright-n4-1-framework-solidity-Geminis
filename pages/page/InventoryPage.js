@@ -1,4 +1,4 @@
-import { expect } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { Locators } from "../../data/data.js";
 import { BasePage } from "../base/BasePage.js";
 
@@ -10,6 +10,8 @@ export class InventoryPage extends BasePage {
 
         //*Header
         this.inventoryTitleText = Locators.inventory.inventoryHeader.inventoryTitleText;
+
+        this.iconCart = Locators.header.menu.iconCart;
 
         //*Filter
         this.productsFilter = page.getByTestId(Locators.inventory.filter.productsFilter);
@@ -33,26 +35,31 @@ export class InventoryPage extends BasePage {
         //*Price
         this.priceAndBtnContainer = Locators.inventory.price.priceAndBtnContainer;
         this.productPrice = Locators.inventory.price.productPrice;
-        this.btnAddToCart = page.getByRole("button", { name:Locators.inventory.price.btnAddToCart });
+        this.btnAddToCart = page.getByRole("button", { name: Locators.inventory.price.btnAddToCart });
         this.btnRemove = page.getByRole("button", { name: Locators.inventory.price.btnRemove });
     }
 
-    async selectProduct(){
-
+    async selectProductByIndex(index) {
+        return this.product.nth(index);
     }
 
-    async addProduct(indice) {
-        
-        await this.btnAddToCart.nth().click();
-    }
-    async removeProduct(indice) {
-        await this.btnRemove.nth().click();
+    async addProduct(index) {
+        const product = await this.selectProductByIndex(index);
+        const btnAdd = product.getByRole("button", { name: Locators.inventory.price.btnAddToCart });
+        await btnAdd.click();
     }
 
+    async removeProduct(index) {
+        const product = await this.selectProductByIndex(index);
+        const btnRemove = product.getByRole("button", { name: Locators.inventory.price.btnRemove });
+        await btnRemove.click();
+    }
 
-    async gotToCart() {}
+    async gotToCart() {
+        await this.header.iconCart.click();
+    }
 
-    //* isInventoryPageOk contiene a cada sección de la pagina 
+    //* isInventoryPageOk contiene a cada sección de la pagina
     async isInventoryPageOk() {
         await this.header.verifyUIHeader(this.inventoryTitleText);
         await this.isFilterOk();
@@ -92,6 +99,8 @@ export class InventoryPage extends BasePage {
         //*Sabiendo cuantos productos iguales hay, itera sobre cada uno de ellos y usa el metodo isProductOk
         for (let i = 0; i < totalProducts; i++) {
             await this.isProductOk(i);
+
+
         }
     }
 
@@ -137,16 +146,28 @@ export class InventoryPage extends BasePage {
 
         await expect(btnAdd).toBeVisible();
         await expect(btnRemove).not.toBeVisible();
-
+        
         await btnAdd.click();
         await expect(btnAdd).not.toBeVisible();
         await expect(btnRemove).toBeVisible();
+
+        //*  Separar btnAdd  de btnRemove   y entre una y otra agregar verificar el iconCartQTY, luego de remover tambien; pero hay que validar que se sumen uno tras otros, y luego que se descuenten uno tras otro.  
+
+
+        await btnRemove.click();
+        await expect(btnRemove).not.toBeVisible();
+        await expect(btnAdd).toBeVisible();
+
+
+        //* Queda sin productos agregados
+    }
+
+    async isQtyProductsInIconCartOk(){
+        const qtyProductsInIconCart = this.page.getByTestId(Locators.header.menu.iconCart).textContent()
+
+        return 
     }
 }
-
-
-
-
 
 // add y count in item
 // remove
