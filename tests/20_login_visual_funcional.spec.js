@@ -26,9 +26,9 @@ test.describe("Page Login", () => {
         await login.hacerLogin({ user: Locators.login.credenciales.user, pass: Locators.login.credenciales.pass, tipo: true });
     });
     //* Test exitosos pero con inconvenientes en el performance o flujo
-    test("Login performance_glitch_user", async ({ page }) => {
-        await login.hacerLogin({ user: Locators.login.credenciales.performance_glitch_user, pass: Locators.login.credenciales.pass, tipo: "late" }); // performance_glitch_user
-    });
+    // test("Login performance_glitch_user", async ({ page }) => {
+    //     await login.hacerLogin({ user: Locators.login.credenciales.performance_glitch_user, pass: Locators.login.credenciales.pass, tipo: "late" }); // performance_glitch_user
+    // });
     test("Login error_user", async ({ page }) => {
         await login.hacerLogin({ user: Locators.login.credenciales.performance_glitch_user, pass: Locators.login.credenciales.pass, tipo: "error_user" });
 

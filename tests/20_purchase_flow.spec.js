@@ -21,7 +21,7 @@ test.describe("Challenge", () => {
         await login.navegar();
     });
 
-    test.only("Challenge n4", async ({ page }) => {
+    test("Challenge n4", async ({ page }) => {
         await login.hacerLogin({ user: Locators.login.credenciales.user, pass: Locators.login.credenciales.pass, tipo: true });
 
         await inventory.addProduct(0)

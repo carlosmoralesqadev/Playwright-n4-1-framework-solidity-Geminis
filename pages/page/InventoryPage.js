@@ -11,7 +11,7 @@ export class InventoryPage extends BasePage {
         //*Header
         this.inventoryTitleText = Locators.inventory.inventoryHeader.inventoryTitleText;
 
-        this.iconCart = Locators.header.menu.iconCart;
+        this.countIconCart = page.getByTestId(Locators.header.cart.countIconCart);
 
         //*Filter
         this.productsFilter = page.getByTestId(Locators.inventory.filter.productsFilter);
@@ -163,9 +163,9 @@ export class InventoryPage extends BasePage {
     }
 
     async isQtyProductsInIconCartOk(){
-        const qtyProductsInIconCart = this.page.getByTestId(Locators.header.menu.iconCart).textContent()
+        const qtyProductsInIconCart = this.countIconCart.textContent()
 
-        return 
+        await expect(this)
     }
 }
 
