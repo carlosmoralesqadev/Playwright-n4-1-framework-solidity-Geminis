@@ -92,44 +92,69 @@ export class InventoryPage extends BasePage {
         await expect(this.productsList).toBeVisible();
     }
 
+
+
+
+
+
+
+
+
     async iterarProducts() {
-        //*Toma a product y cuenta cuantos hay.
+        //*Cuantos productos hay - Me sirve para iterar
         const totalProducts = await this.product.count();
 
-        //*Sabiendo cuantos productos iguales hay, itera sobre cada uno de ellos y usa el metodo isProductOk
+        //*Completo visualmente
         for (let i = 0; i < totalProducts; i++) {
             await this.isProductOk(i);
+        }
 
+        //*Agregar y contar
+        for (let i = 0; i < totalProducts; i++) {
+            await this.isBtnAddOk()
+            await expect(this.countIconCart).toHaveText(i);
+        }
 
+        //*Remover y contar
+        for (let i = totalProductos; i > 0; i--) {
+            await this.isBtnRemoveOk()
+            await expect(this.countIconCart).toHaveText(i);
         }
     }
+
+
+
+
+
+
+
+
+
+
 
     /**------------------------------------------------------*/
     /**------------------------------------------------------*/
     /**------------------------------------------------------*/
     //* isProductOk Tiene : Img, Description, Price, Btns
     //* isProduct pasa a isInventoryPageOk que evalua toda la pagina, donde iterando los productos.
-    async isProductOk(indice) {
-        const product = this.product.nth(indice);
+    async isProductOk(i) {
+        const product = this.product.nth(i);
 
         await this.isImgOk(product);
         await this.isDescriptionOk(product);
         await this.isPriceOk(product);
         await this.isBtnsOk(product);
     }
-
     async isImgOk(product) {
         await expect(product.locator(this.imgContainer)).toBeVisible();
         await expect(product.locator(this.img)).toBeVisible();
     }
-
     async isDescriptionOk(product) {
         await expect(product.getByTestId(this.descriptionContainer)).toBeVisible();
         await expect(product.locator(this.LabelContainer)).toBeVisible();
         await expect(product.getByTestId(this.productName)).toBeVisible();
         await expect(product.getByTestId(this.productDescription)).toBeVisible();
     }
-
     async isPriceOk(product) {
         await expect(product.locator(this.priceAndBtnContainer)).toBeVisible();
         await expect(product.getByTestId(this.productPrice)).toBeVisible();
@@ -139,35 +164,54 @@ export class InventoryPage extends BasePage {
         const btnAdd = product.getByRole("button", {
             name: Locators.inventory.price.btnAddToCart,
         });
-
         const btnRemove = product.getByRole("button", {
             name: Locators.inventory.price.btnRemove,
         });
-
         await expect(btnAdd).toBeVisible();
         await expect(btnRemove).not.toBeVisible();
-        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    async isBtnAddOk(product) {
         await btnAdd.click();
         await expect(btnAdd).not.toBeVisible();
         await expect(btnRemove).toBeVisible();
+    }
 
-        //*  Separar btnAdd  de btnRemove   y entre una y otra agregar verificar el iconCartQTY, luego de remover tambien; pero hay que validar que se sumen uno tras otros, y luego que se descuenten uno tras otro.  
-
-
+    async isBtnRemoveOk(product) {
         await btnRemove.click();
         await expect(btnRemove).not.toBeVisible();
         await expect(btnAdd).toBeVisible();
-
-
-        //* Queda sin productos agregados
     }
 
-    async isQtyProductsInIconCartOk(){
-        const qtyProductsInIconCart = this.countIconCart.textContent()
-
-        await expect(this)
+    async isQtyProductsInIconCartOk(i) {
+        await expect(this.countIconCart).toHaveText(i);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // add y count in item
 // remove
