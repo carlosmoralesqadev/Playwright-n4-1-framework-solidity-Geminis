@@ -39,21 +39,38 @@ export class InventoryPage extends BasePage {
         this.btnRemove = page.getByRole("button", { name: Locators.inventory.price.btnRemove });
     }
 
-    async selectProductByIndex(index) {
+    //*-----------------------------------------
+
+    getProductByIndex(index) {
         return this.product.nth(index);
     }
-
-    async addProduct(index) {
-        const product = await this.selectProductByIndex(index);
-        const btnAdd = product.getByRole("button", { name: Locators.inventory.price.btnAddToCart });
+    getBtnAddByProduct(product) {
+        const anyBtnAdd = product.getByRole("button", {
+            name: Locators.inventory.price.btnAddToCart,
+        });
+        return btnAddOfProduct;
+    }
+    async addProductByIndex(index) {
+        const product = await this.getProductByIndex(index);
+        const btnAdd = this.getBtnAddByProduct(product);
         await btnAdd.click();
     }
 
-    async removeProduct(index) {
-        const product = await this.selectProductByIndex(index);
-        const btnRemove = product.getByRole("button", { name: Locators.inventory.price.btnRemove });
+    //*-----------------------------------------
+
+    getBtnRemoveByProduct(product) {
+        const anyBtnRemove = product.getByRole("button", {
+            name: Locators.inventory.price.btnRemove,
+        });
+        return btnRemoveOfProduct;
+    }
+    async removeProductByIndex(index) {
+        const product = await this.getProductByIndex(index);
+        const btnRemove = this.getBtnRemoveByProduct(product);
         await btnRemove.click();
     }
+
+    //*------------------------------------------
 
     async gotToCart() {
         await this.header.iconCart.click();
@@ -92,14 +109,6 @@ export class InventoryPage extends BasePage {
         await expect(this.productsList).toBeVisible();
     }
 
-
-
-
-
-
-
-
-
     async iterarProducts() {
         //*Cuantos productos hay - Me sirve para iterar
         const totalProducts = await this.product.count();
@@ -111,26 +120,16 @@ export class InventoryPage extends BasePage {
 
         //*Agregar y contar
         for (let i = 0; i < totalProducts; i++) {
-            await this.isBtnAddOk()
+            await this.isBtnAddOk(product);
             await expect(this.countIconCart).toHaveText(i);
         }
 
         //*Remover y contar
         for (let i = totalProductos; i > 0; i--) {
-            await this.isBtnRemoveOk()
+            await this.isBtnRemoveOk(product);
             await expect(this.countIconCart).toHaveText(i);
         }
     }
-
-
-
-
-
-
-
-
-
-
 
     /**------------------------------------------------------*/
     /**------------------------------------------------------*/
@@ -138,12 +137,12 @@ export class InventoryPage extends BasePage {
     //* isProductOk Tiene : Img, Description, Price, Btns
     //* isProduct pasa a isInventoryPageOk que evalua toda la pagina, donde iterando los productos.
     async isProductOk(i) {
-        const product = this.product.nth(i);
+        const product = await this.getProductByIndex(i);
 
         await this.isImgOk(product);
         await this.isDescriptionOk(product);
         await this.isPriceOk(product);
-        await this.isBtnsOk(product);
+        await this.isAndFunctionBtnsOk(product, i);
     }
     async isImgOk(product) {
         await expect(product.locator(this.imgContainer)).toBeVisible();
@@ -160,58 +159,34 @@ export class InventoryPage extends BasePage {
         await expect(product.getByTestId(this.productPrice)).toBeVisible();
     }
 
-    async isBtnsOk(product) {
-        const btnAdd = product.getByRole("button", {
-            name: Locators.inventory.price.btnAddToCart,
-        });
-        const btnRemove = product.getByRole("button", {
-            name: Locators.inventory.price.btnRemove,
-        });
-        await expect(btnAdd).toBeVisible();
-        await expect(btnRemove).not.toBeVisible();
+    //*Solo para verificar que los botenes estan o  no .
+    async isAndFunctionBtnsOk(product, i) {
+        const btnAdd = await this.getBtnAddByProduct(product);
+        const btnRemove = await this.getBtnRemoveByProduct(product);
+
+        await this.conditionBtnWithOutAddProduct(btnAdd, btnRemove);
+        await this.addProductByIndex(i);
+        await this.conditionBtnWithAddProduct(btnAdd, btnRemove);
+        await this.isQtyProductsInIconCartOk(1);
+        await this.removeProductByIndex(i);
+        
+        await this.isQtyProductsInIconCartOk("");
     }
 
-
-
-
-
-
-
-
-
-
-
-
-    async isBtnAddOk(product) {
-        await btnAdd.click();
+    async conditionBtnWithAddProduct(btnAdd, btnRemove) {
         await expect(btnAdd).not.toBeVisible();
         await expect(btnRemove).toBeVisible();
     }
 
-    async isBtnRemoveOk(product) {
-        await btnRemove.click();
-        await expect(btnRemove).not.toBeVisible();
+    async conditionBtnWithOutAddProduct(btnAdd, btnRemove) {
         await expect(btnAdd).toBeVisible();
+        await expect(btnRemove).not.toBeVisible();
     }
 
     async isQtyProductsInIconCartOk(i) {
         await expect(this.countIconCart).toHaveText(i);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // add y count in item
 // remove
