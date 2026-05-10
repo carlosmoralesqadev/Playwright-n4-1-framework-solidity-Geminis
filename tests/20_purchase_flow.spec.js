@@ -24,10 +24,10 @@ test.describe("Challenge", () => {
     test("Challenge n4", async ({ page }) => {
         await login.hacerLogin({ user: Locators.login.credenciales.user, pass: Locators.login.credenciales.pass, tipo: true });
 
-        await inventory.addProduct(0)
-        await inventory.addProduct(1)
-        await inventory.addProduct(2)
-        await inventory.removeProduct(0)
+        await inventory.addProductByIndex(0)
+        await inventory.addProductByIndex(1)
+        await inventory.addProductByIndex(2)
+        await inventory.removeProductByIndex(0)
 
         await inventory.gotToCart()
 
