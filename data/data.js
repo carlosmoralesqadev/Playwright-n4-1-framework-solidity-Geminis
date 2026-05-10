@@ -3,7 +3,7 @@ import { headerLocators           } from "./locators/componentsLocators/headerLo
 import { footerLocators           } from "./locators/componentsLocators/footerLocators.js";
 import { loginLocators            } from "./locators/pageLocators/loginLocators.js";
 import { inventoryLocators        } from "./locators/pageLocators/inventoryLocators.js";
-import { checkCartLocators        } from "./locators/pageLocators/checkCartLocators.js";
+import { yourCartLocators        } from "./locators/pageLocators/yourCartLocators.js";
 import { payFormLocators          } from "./locators/pageLocators/payFormLocators.js";
 import { checkoutOverviewLocators } from "./locators/pageLocators/checkoutOverviewLocators.js";
 
@@ -13,7 +13,7 @@ export const Locators = {
     footer    : footerLocators,
     login     : loginLocators,
     inventory : inventoryLocators,
-    checkCart : checkCartLocators,
+    yourCart : yourCartLocators,
     payForm   : payFormLocators,
     checkoutOverview: checkoutOverviewLocators,
 
